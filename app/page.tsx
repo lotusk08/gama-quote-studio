@@ -167,6 +167,20 @@ const AIProcessingLoader = ({ status }: { status: "analyze" | "remove-bg" | null
 };
 
 // Cryptographically random unique quote code generator to prevent duplication or fraud
+const hexToRgba = (hex: string, alpha: number) => {
+  const cleanHex = hex.replace("#", "");
+  if (cleanHex.length === 3) {
+    const r = parseInt(cleanHex[0] + cleanHex[0], 16);
+    const g = parseInt(cleanHex[1] + cleanHex[1], 16);
+    const b = parseInt(cleanHex[2] + cleanHex[2], 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
 const generateUniqueQuoteCode = () => {
   const d = new Date();
   const yy = d.getFullYear().toString().slice(-2);
@@ -174,7 +188,7 @@ const generateUniqueQuoteCode = () => {
   const dd = d.getDate().toString().padStart(2, '0');
   const hh = d.getHours().toString().padStart(2, '0');
   const min = d.getMinutes().toString().padStart(2, '0');
-  
+
   // High range random component (4-digit) to ensure uniqueness
   const rand = Math.floor(1000 + Math.random() * 9000);
   return `GAMA-RE-${yy}${mm}${dd}-${hh}${min}-${rand}`;
@@ -1073,7 +1087,61 @@ function PageContent() {
         useCORS: true,
         allowTaint: false,
         backgroundColor: "#ffffff",
-        logging: false
+        logging: false,
+        onclone: (clonedDoc: any) => {
+          // Fix color rendering issues in html2canvas by resolving oklch & CSS variable colors to standard formats
+          const canvasHelper = clonedDoc.createElement('canvas');
+          canvasHelper.width = 1;
+          canvasHelper.height = 1;
+          const ctx = canvasHelper.getContext('2d');
+
+          if (ctx) {
+            const resolveColor = (colorStr: string) => {
+              if (!colorStr || colorStr === 'transparent' || colorStr === 'rgba(0, 0, 0, 0)') return colorStr;
+              try {
+                ctx.fillStyle = colorStr;
+                return ctx.fillStyle;
+              } catch (e) {
+                return colorStr;
+              }
+            };
+
+            const elements = clonedDoc.querySelectorAll('*');
+            elements.forEach((el: any) => {
+              const computedStyle = window.getComputedStyle(el);
+
+              // Resolve background color if it has oklch or is dynamic
+              const bg = computedStyle.backgroundColor;
+              if (bg && (bg.includes('oklch') || bg.includes('var('))) {
+                el.style.backgroundColor = resolveColor(bg);
+              }
+
+              // Resolve text color
+              const textCol = computedStyle.color;
+              if (textCol && (textCol.includes('oklch') || textCol.includes('var('))) {
+                el.style.color = resolveColor(textCol);
+              }
+
+              // Resolve individual border colors (browsers return empty string for shorthand borderColor)
+              const borderTop = computedStyle.borderTopColor;
+              if (borderTop && (borderTop.includes('oklch') || borderTop.includes('var('))) {
+                el.style.borderTopColor = resolveColor(borderTop);
+              }
+              const borderRight = computedStyle.borderRightColor;
+              if (borderRight && (borderRight.includes('oklch') || borderRight.includes('var('))) {
+                el.style.borderRightColor = resolveColor(borderRight);
+              }
+              const borderBottom = computedStyle.borderBottomColor;
+              if (borderBottom && (borderBottom.includes('oklch') || borderBottom.includes('var('))) {
+                el.style.borderBottomColor = resolveColor(borderBottom);
+              }
+              const borderLeft = computedStyle.borderLeftColor;
+              if (borderLeft && (borderLeft.includes('oklch') || borderLeft.includes('var('))) {
+                el.style.borderLeftColor = resolveColor(borderLeft);
+              }
+            });
+          }
+        }
       });
 
       const dataUrl = canvas.toDataURL("image/png");
@@ -1111,7 +1179,61 @@ function PageContent() {
         useCORS: true,
         allowTaint: false,
         backgroundColor: "#ffffff",
-        logging: false
+        logging: false,
+        onclone: (clonedDoc: any) => {
+          // Fix color rendering issues in html2canvas by resolving oklch & CSS variable colors to standard formats
+          const canvasHelper = clonedDoc.createElement('canvas');
+          canvasHelper.width = 1;
+          canvasHelper.height = 1;
+          const ctx = canvasHelper.getContext('2d');
+
+          if (ctx) {
+            const resolveColor = (colorStr: string) => {
+              if (!colorStr || colorStr === 'transparent' || colorStr === 'rgba(0, 0, 0, 0)') return colorStr;
+              try {
+                ctx.fillStyle = colorStr;
+                return ctx.fillStyle;
+              } catch (e) {
+                return colorStr;
+              }
+            };
+
+            const elements = clonedDoc.querySelectorAll('*');
+            elements.forEach((el: any) => {
+              const computedStyle = window.getComputedStyle(el);
+
+              // Resolve background color if it has oklch or is dynamic
+              const bg = computedStyle.backgroundColor;
+              if (bg && (bg.includes('oklch') || bg.includes('var('))) {
+                el.style.backgroundColor = resolveColor(bg);
+              }
+
+              // Resolve text color
+              const textCol = computedStyle.color;
+              if (textCol && (textCol.includes('oklch') || textCol.includes('var('))) {
+                el.style.color = resolveColor(textCol);
+              }
+
+              // Resolve individual border colors (browsers return empty string for shorthand borderColor)
+              const borderTop = computedStyle.borderTopColor;
+              if (borderTop && (borderTop.includes('oklch') || borderTop.includes('var('))) {
+                el.style.borderTopColor = resolveColor(borderTop);
+              }
+              const borderRight = computedStyle.borderRightColor;
+              if (borderRight && (borderRight.includes('oklch') || borderRight.includes('var('))) {
+                el.style.borderRightColor = resolveColor(borderRight);
+              }
+              const borderBottom = computedStyle.borderBottomColor;
+              if (borderBottom && (borderBottom.includes('oklch') || borderBottom.includes('var('))) {
+                el.style.borderBottomColor = resolveColor(borderBottom);
+              }
+              const borderLeft = computedStyle.borderLeftColor;
+              if (borderLeft && (borderLeft.includes('oklch') || borderLeft.includes('var('))) {
+                el.style.borderLeftColor = resolveColor(borderLeft);
+              }
+            });
+          }
+        }
       });
 
       const imgData = canvas.toDataURL("image/jpeg", 0.98);
@@ -2037,13 +2159,14 @@ function PageContent() {
             <div className="flex gap-1 bg-slate-100 p-1 rounded-xl w-full md:w-auto">
               {[
                 { key: "enterprise", label: "Mẫu Doanh Nghiệp" },
-                { key: "bento", label: "Mẫu Bento Visual" },
-                { key: "poster", label: "Mẫu Thẻ Sang Trọng" }
+                { key: "bento", label: "Mẫu Bento" },
+                { key: "poster", label: "Mẫu Thẻ Đơn" }
               ].map(t => (
                 <button
                   key={t.key}
                   onClick={() => setTemplate(t.key as any)}
-                  className={`flex-1 md:flex-none px-4 py-2 rounded-lg text-xs font-bold transition-all ${template === t.key ? "bg-slate-900 text-white shadow" : "text-slate-600 hover:text-slate-900"}`}
+                  className={`flex-1 md:flex-none px-4 py-2 rounded-lg text-xs font-bold transition-all ${template === t.key ? "text-white shadow" : "text-slate-600 hover:text-slate-900"}`}
+                  style={{ backgroundColor: template === t.key ? "#0D5235" : undefined }}
                 >
                   {t.label}
                 </button>
@@ -2099,6 +2222,21 @@ function PageContent() {
                 color: "#1e293b"
               }}
             >
+              {/* Force clean RGB background and border colors for html2canvas rendering */}
+              <style>{`
+                #quotation-preview .border-slate-100 {
+                  border-color: #f1f5f9 !important;
+                }
+                #quotation-preview .border-slate-200 {
+                  border-color: #e2e8f0 !important;
+                }
+                #quotation-preview .bg-slate-50 {
+                  background-color: #f8fafc !important;
+                }
+                #quotation-preview td, #quotation-preview th {
+                  border-color: #e2e8f0 !important;
+                }
+              `}</style>
 
               {/* =========================================================
                   TEMPLATE 1: ENTERPRISE STANDARD SHEET (MODERN EXCEL REMAKE)
@@ -2111,7 +2249,7 @@ function PageContent() {
                     {/* Brand Left Info Block */}
                     <div className="flex items-center gap-4">
                       {/* Logo Frame */}
-                      <div className="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/60 flex items-center justify-center shadow-sm">
+                      <div className="p-2.5 rounded-2xl border flex items-center justify-center shadow-sm" style={{ backgroundColor: "#f8fafc", borderColor: "#e2e8f0" }}>
                         <GamaInterlockLogo size={58} />
                       </div>
 
@@ -2128,7 +2266,7 @@ function PageContent() {
                     </div>
 
                     {/* Meta Info Block Right */}
-                    <div className="text-right space-y-1 bg-slate-50 p-3 rounded-xl border border-slate-100 min-w-[140px] shadow-inner">
+                    <div className="text-right space-y-1 p-3 rounded-xl border min-w-[140px]" style={{ backgroundColor: "#f8fafc", borderColor: "#f1f5f9" }}>
                       <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Ngày báo giá</p>
                       <p className="text-xs font-bold text-slate-800">{generalInfo.date}</p>
                       <div className="pt-2 mt-2 border-t border-slate-200/80">
@@ -2152,7 +2290,7 @@ function PageContent() {
                   </div>
 
                   {/* CUSTOMER RECIPIENT BLOCK */}
-                  <div className="flex justify-between items-start gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-inner">
+                  <div className="flex justify-between items-start gap-4 p-4 rounded-xl border" style={{ backgroundColor: "#f8fafc", borderColor: "#f1f5f9" }}>
                     <div>
                       <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Kính gửi đối tác</span>
                       <p className="text-sm font-bold text-slate-900">{generalInfo.recipient}</p>
@@ -2188,7 +2326,7 @@ function PageContent() {
                         </thead>
                         <tbody className="divide-y divide-slate-200 text-xs">
                           {products.map((p, index) => (
-                            <tr key={p.id} className={`${index % 2 === 0 ? "bg-white" : "bg-slate-50/50"} hover:bg-slate-100/40 transition-colors`}>
+                            <tr key={p.id} className="hover:bg-slate-100/40 transition-colors" style={{ backgroundColor: index % 2 === 0 ? "#ffffff" : "#f8fafc" }}>
 
                               {/* Product Photo Box with color blend background */}
                               <td className="py-2.5 px-2 text-center">
@@ -2348,7 +2486,7 @@ function PageContent() {
 
                     {/* Left: Brand logo frame & company detail */}
                     <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
-                      <div className="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/50 flex items-center justify-center shadow-inner shrink-0">
+                      <div className="p-2.5 rounded-2xl border flex items-center justify-center shrink-0" style={{ backgroundColor: "#f8fafc", borderColor: "#e2e8f0" }}>
                         <GamaInterlockLogo size={54} />
                       </div>
                       <div className="space-y-1">
@@ -2383,7 +2521,7 @@ function PageContent() {
                       >
                         {/* Photo Container */}
                         <div
-                          className="w-full aspect-square rounded-xl flex items-center justify-center relative overflow-hidden mb-3.5 shadow-inner"
+                          className="w-full aspect-square rounded-xl flex items-center justify-center relative overflow-hidden mb-3.5"
                           style={{ backgroundColor: p.bgColor || "#f8fafc" }}
                         >
                           <img
@@ -2489,7 +2627,7 @@ function PageContent() {
                         <h3 className="text-xl font-black tracking-wider uppercase" style={{ color: "#0D5235" }}>{generalInfo.companyName}</h3>
                       </div>
                     </div>
-                    <span className="text-[9px] font-bold px-2.5 py-1 rounded font-mono uppercase tracking-wider" style={{ backgroundColor: `${colors.primary}15`, color: colors.primary }}>
+                    <span className="text-[9px] font-bold px-2.5 py-1 rounded font-mono uppercase tracking-wider" style={{ backgroundColor: hexToRgba(colors.primary, 0.15), color: colors.primary }}>
                       Premium Catalog
                     </span>
                   </div>
@@ -2598,16 +2736,16 @@ function PageContent() {
                   )}
 
                   {/* Luxury bottom signature */}
-                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 grid grid-cols-2 gap-4 items-center">
+                  <div className="p-5 rounded-2xl border grid grid-cols-2 gap-4 items-center" style={{ backgroundColor: "#f8fafc", borderColor: "#f1f5f9" }}>
                     <div>
-                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Liên hệ mua hàng sỉ / lẻ</p>
+                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Liên hệ mua hàng</p>
                       <p className="text-sm font-black text-slate-800">{generalInfo.saleRepName}</p>
                       <p className="text-xs font-bold font-mono" style={{ color: colors.primary }}>{generalInfo.saleRepPhone}</p>
                     </div>
 
                     <div className="text-right space-y-0.5 text-[9px] text-slate-500 font-medium">
                       <p className="font-bold text-slate-700">CHÍNH SÁCH ƯU ĐÃI</p>
-                      <p>Hỗ trợ đổi trả trong vòng 1 năm</p>
+                      <p>Ưu đãi được cập nhật bởi đại diện kinh doanh của GAMA.</p>
                       <p>Sản phẩm phân phối bởi GAMA Group</p>
                     </div>
                   </div>
