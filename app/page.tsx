@@ -88,6 +88,7 @@ const GamaInterlockLogo = ({ size = 48, className = "" }: { size?: number; class
   <img 
     src="/logos/logo-mark.png" 
     alt="Gama Logo" 
+    crossOrigin="anonymous"
     className={className} 
     style={{ height: size, width: 'auto', objectFit: 'contain' }}
   />
@@ -348,6 +349,19 @@ function PageContent() {
   // Reference to preview container for exporting
   const previewRef = useRef<HTMLDivElement>(null);
   const isLoaded = useRef(false);
+  const html2canvasRef = useRef<any>(null);
+  const jsPdfRef = useRef<any>(null);
+
+  // Pre-load libraries to avoid ChunkLoadError when exporting
+  useEffect(() => {
+    import("html2canvas-pro").then((m) => {
+      html2canvasRef.current = m.default;
+    }).catch(err => console.error("Failed to pre-load html2canvas-pro", err));
+    
+    import("jspdf").then((m) => {
+      jsPdfRef.current = m.jsPDF;
+    }).catch(err => console.error("Failed to pre-load jspdf", err));
+  }, []);
 
   // Load from local storage or set defaults on mount
   useEffect(() => {
@@ -712,11 +726,11 @@ function PageContent() {
     await new Promise(resolve => setTimeout(resolve, 300));
 
     try {
-      const html2canvas = (await import("html2canvas")).default;
+      const html2canvas = html2canvasRef.current || (await import("html2canvas-pro")).default;
       const canvas = await html2canvas(previewRef.current, {
         scale: 2.2, // crisp, professional quality
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
         backgroundColor: "#ffffff",
         logging: false
       });
@@ -748,13 +762,13 @@ function PageContent() {
     await new Promise(resolve => setTimeout(resolve, 300));
 
     try {
-      const html2canvas = (await import("html2canvas")).default;
-      const { jsPDF } = await import("jspdf");
+      const html2canvas = html2canvasRef.current || (await import("html2canvas-pro")).default;
+      const jsPDF = jsPdfRef.current || (await import("jspdf")).jsPDF;
 
       const canvas = await html2canvas(previewRef.current, {
         scale: 2.0,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
         backgroundColor: "#ffffff",
         logging: false
       });
@@ -799,7 +813,7 @@ function PageContent() {
   // ==========================================
   // Inline edit handlers in Preview
   // ==========================================
-  const handleInlineEditProduct = (id: string, field: "productCode" | "productName" | "price" | "unit", value: string) => {
+  const handleInlineEditProduct = (id: string, field: "productCode" | "productName" | "price" | "unit" | "description", value: string) => {
     if (field === "price") {
       const numeric = parseInt(value.replace(/[^0-9]/g, "")) || 0;
       updateProductField(id, field, numeric);
@@ -1219,6 +1233,17 @@ function PageContent() {
                           value={selectedProduct.unit}
                           onChange={(e) => updateProductField(selectedProduct.id, "unit", e.target.value)}
                           className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-slate-900"
+                        />
+                      </div>
+
+                      <div className="col-span-2">
+                        <label className="block text-[10px] text-slate-500 mb-1">Mô tả sản phẩm / Chi tiết kỹ thuật</label>
+                        <textarea
+                          value={selectedProduct.description || ""}
+                          onChange={(e) => updateProductField(selectedProduct.id, "description", e.target.value)}
+                          rows={2}
+                          placeholder="Mô tả chất liệu, đặc tính kỹ thuật..."
+                          className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-slate-900 resize-none"
                         />
                       </div>
                     </div>
@@ -1726,6 +1751,7 @@ function PageContent() {
                                   <img 
                                     src={p.image} 
                                     alt="" 
+                                    crossOrigin="anonymous"
                                     className="max-w-[85%] max-h-[85%] object-contain"
                                     style={{
                                       filter: `brightness(${p.brightness}%) contrast(${p.contrast}%) saturate(${p.saturate}%)`,
@@ -1738,24 +1764,39 @@ function PageContent() {
 
                               {/* Product Code */}
                               <td className="py-3 px-3 font-mono font-bold text-slate-900">
-                                <input
-                                  type="text"
-                                  value={p.productCode}
-                                  onChange={(e) => handleInlineEditProduct(p.id, "productCode", e.target.value)}
-                                  className="w-full bg-transparent border-b border-transparent hover:border-slate-300 focus:border-slate-400 focus:outline-none py-0.5"
-                                />
+                                <span className={`${isExporting ? "block" : "hidden"} print:block py-0.5`}>{p.productCode}</span>
+                                {!isExporting && (
+                                  <input
+                                    type="text"
+                                    value={p.productCode}
+                                    onChange={(e) => handleInlineEditProduct(p.id, "productCode", e.target.value)}
+                                    className="w-full bg-transparent border-b border-transparent hover:border-slate-300 focus:border-slate-400 focus:outline-none py-0.5 print:hidden"
+                                  />
+                                )}
                               </td>
 
                               {/* Product Name */}
                               <td className="py-3 px-4 text-slate-800 font-semibold leading-relaxed">
-                                <input
-                                  type="text"
-                                  value={p.productName}
-                                  onChange={(e) => handleInlineEditProduct(p.id, "productName", e.target.value)}
-                                  className="w-full bg-transparent border-b border-transparent hover:border-slate-300 focus:border-slate-400 focus:outline-none py-0.5 font-medium"
-                                />
-                                {p.description && (
-                                  <p className="text-[10px] text-slate-400 font-normal mt-0.5">{p.description}</p>
+                                <span className={`${isExporting ? "block" : "hidden"} print:block py-0.5 font-medium`}>{p.productName}</span>
+                                {!isExporting && (
+                                  <input
+                                    type="text"
+                                    value={p.productName}
+                                    onChange={(e) => handleInlineEditProduct(p.id, "productName", e.target.value)}
+                                    className="w-full bg-transparent border-b border-transparent hover:border-slate-300 focus:border-slate-400 focus:outline-none py-0.5 font-medium print:hidden"
+                                  />
+                                )}
+                                <span className={`${isExporting ? "block" : "hidden"} print:block text-[10px] text-slate-400 font-normal mt-0.5`}>
+                                  {p.description || ""}
+                                </span>
+                                {!isExporting && (
+                                  <input
+                                    type="text"
+                                    value={p.description || ""}
+                                    onChange={(e) => handleInlineEditProduct(p.id, "description", e.target.value)}
+                                    placeholder="Thêm mô tả..."
+                                    className="w-full bg-transparent border-b border-transparent hover:border-slate-300 focus:border-slate-400 focus:outline-none text-[10px] text-slate-400 font-normal mt-0.5 print:hidden"
+                                  />
                                 )}
                               </td>
 
@@ -1771,23 +1812,29 @@ function PageContent() {
 
                               {/* Unit */}
                               <td className="py-3 px-2 text-center text-slate-600 font-medium">
-                                <input
-                                  type="text"
-                                  value={p.unit}
-                                  onChange={(e) => handleInlineEditProduct(p.id, "unit", e.target.value)}
-                                  className="w-10 bg-transparent border-b border-transparent hover:border-slate-300 text-center focus:outline-none"
-                                />
+                                <span className={`${isExporting ? "block" : "hidden"} print:block text-center`}>{p.unit}</span>
+                                {!isExporting && (
+                                  <input
+                                    type="text"
+                                    value={p.unit}
+                                    onChange={(e) => handleInlineEditProduct(p.id, "unit", e.target.value)}
+                                    className="w-10 bg-transparent border-b border-transparent hover:border-slate-300 text-center focus:outline-none print:hidden"
+                                  />
+                                )}
                               </td>
 
                               {/* Pricing with Red Styling */}
                               <td className="py-3 px-4 text-right font-bold text-rose-600 text-sm">
                                 <div className="flex items-center justify-end">
-                                  <input
-                                    type="text"
-                                    value={p.price.toLocaleString("vi-VN")}
-                                    onChange={(e) => handleInlineEditProduct(p.id, "price", e.target.value)}
-                                    className="w-20 bg-transparent border-b border-transparent hover:border-slate-300 text-right font-bold text-rose-600 focus:outline-none"
-                                  />
+                                  <span className={`${isExporting ? "block" : "hidden"} print:block font-bold text-rose-600`}>{p.price.toLocaleString("vi-VN")}</span>
+                                  {!isExporting && (
+                                    <input
+                                      type="text"
+                                      value={p.price.toLocaleString("vi-VN")}
+                                      onChange={(e) => handleInlineEditProduct(p.id, "price", e.target.value)}
+                                      className="w-20 bg-transparent border-b border-transparent hover:border-slate-300 text-right font-bold text-rose-600 focus:outline-none print:hidden"
+                                    />
+                                  )}
                                   <span className="ml-0.5 text-xs">đ</span>
                                 </div>
                               </td>
@@ -1871,6 +1918,7 @@ function PageContent() {
                           <img 
                             src={p.image} 
                             alt="" 
+                            crossOrigin="anonymous"
                             className="max-w-[80%] max-h-[80%] object-contain"
                             style={{
                               filter: `brightness(${p.brightness}%) contrast(${p.contrast}%) saturate(${p.saturate}%)`,
@@ -1886,13 +1934,52 @@ function PageContent() {
                         {/* Title and pricing */}
                         <div className="space-y-1">
                           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{p.brand}</p>
-                          <h4 className="text-xs font-bold text-slate-800 line-clamp-2 min-h-[32px] leading-snug">{p.productName}</h4>
+                          
+                          {/* Product Name */}
+                          <span className={`${isExporting ? "block" : "hidden"} print:block text-xs font-bold text-slate-800 line-clamp-2 min-h-[32px] leading-snug`}>
+                            {p.productName}
+                          </span>
+                          {!isExporting && (
+                            <textarea
+                              value={p.productName}
+                              onChange={(e) => handleInlineEditProduct(p.id, "productName", e.target.value)}
+                              rows={2}
+                              className="w-full bg-transparent border border-transparent hover:border-slate-200 focus:border-slate-300 focus:outline-none text-xs font-bold text-slate-800 leading-snug resize-none print:hidden rounded px-1 min-h-[32px]"
+                            />
+                          )}
+
+                          {/* Product Description */}
+                          <span className={`${isExporting ? "block" : "hidden"} print:block text-[9px] text-slate-400 line-clamp-1`}>
+                            {p.description || ""}
+                          </span>
+                          {!isExporting && (
+                            <input
+                              type="text"
+                              value={p.description || ""}
+                              onChange={(e) => handleInlineEditProduct(p.id, "description", e.target.value)}
+                              placeholder="Thêm mô tả..."
+                              className="w-full bg-transparent border border-transparent hover:border-slate-200 focus:border-slate-300 focus:outline-none text-[9px] text-slate-400 print:hidden rounded px-1"
+                            />
+                          )}
                           
                           <div className="flex items-baseline justify-between pt-1 border-t border-slate-100 mt-2">
                             <span className="text-[9px] font-bold text-slate-400 uppercase">Giá KM</span>
-                            <span className="text-sm font-black text-rose-600 font-mono">
-                              {p.price.toLocaleString("vi-VN")}đ
-                            </span>
+                            <div className="flex items-baseline justify-end">
+                              <span className={`${isExporting ? "block" : "hidden"} print:block text-sm font-black text-rose-600 font-mono`}>
+                                {p.price.toLocaleString("vi-VN")}đ
+                              </span>
+                              {!isExporting && (
+                                <div className="flex items-center text-sm font-black text-rose-600 font-mono print:hidden">
+                                  <input
+                                    type="text"
+                                    value={p.price.toLocaleString("vi-VN")}
+                                    onChange={(e) => handleInlineEditProduct(p.id, "price", e.target.value)}
+                                    className="w-20 bg-transparent border border-transparent hover:border-slate-200 hover:bg-slate-50 text-right focus:outline-none rounded px-1 font-bold font-mono"
+                                  />
+                                  <span>đ</span>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1948,6 +2035,7 @@ function PageContent() {
                         <img 
                           src={selectedProduct.image} 
                           alt="" 
+                          crossOrigin="anonymous"
                           className="max-w-[85%] max-h-[85%] object-contain"
                           style={{
                             filter: `brightness(${selectedProduct.brightness}%) contrast(${selectedProduct.contrast}%) saturate(${selectedProduct.saturate}%)`,
@@ -1958,29 +2046,75 @@ function PageContent() {
                       </div>
 
                       {/* Info layout */}
-                      <div className="text-center space-y-4 max-w-xl mx-auto">
-                        <span className="text-xs bg-slate-900 text-white font-mono font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                      <div className="text-center space-y-4 max-w-xl mx-auto flex flex-col items-center">
+                        {/* Product Code */}
+                        <span className={`${isExporting ? "inline-block" : "hidden"} print:inline-block text-xs bg-slate-900 text-white font-mono font-bold px-3 py-1 rounded-full uppercase tracking-widest`}>
                           {selectedProduct.productCode}
                         </span>
+                        {!isExporting && (
+                          <input
+                            type="text"
+                            value={selectedProduct.productCode}
+                            onChange={(e) => handleInlineEditProduct(selectedProduct.id, "productCode", e.target.value)}
+                            className="bg-slate-900 text-white font-mono font-bold px-3 py-1 rounded-full uppercase tracking-widest text-center text-xs focus:outline-none w-32 border border-slate-700 mx-auto print:hidden"
+                          />
+                        )}
                         
-                        <h2 className="text-2xl font-black font-display tracking-tight text-slate-900 leading-snug">
+                        {/* Product Name */}
+                        <h2 className={`${isExporting ? "block" : "hidden"} print:block text-2xl font-black font-display tracking-tight text-slate-900 leading-snug`}>
                           {selectedProduct.productName}
                         </h2>
+                        {!isExporting && (
+                          <textarea
+                            value={selectedProduct.productName}
+                            onChange={(e) => handleInlineEditProduct(selectedProduct.id, "productName", e.target.value)}
+                            rows={2}
+                            className="w-full max-w-lg mx-auto bg-transparent border border-transparent hover:border-slate-200 focus:border-slate-300 focus:outline-none text-2xl font-black font-display tracking-tight text-slate-900 text-center leading-snug resize-none rounded px-2 print:hidden min-h-[64px]"
+                          />
+                        )}
 
-                        {selectedProduct.description && (
-                          <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed italic">
-                            &quot;{selectedProduct.description}&quot;
-                          </p>
+                        {/* Product Description */}
+                        <p className={`${isExporting ? "block" : "hidden"} print:block text-xs text-slate-500 max-w-md mx-auto leading-relaxed italic`}>
+                          &quot;{selectedProduct.description || ""}&quot;
+                        </p>
+                        {!isExporting && (
+                          <textarea
+                            value={selectedProduct.description || ""}
+                            onChange={(e) => handleInlineEditProduct(selectedProduct.id, "description", e.target.value)}
+                            placeholder="Nhập mô tả sản phẩm tại đây..."
+                            rows={3}
+                            className="w-full max-w-md mx-auto bg-transparent border border-transparent hover:border-slate-200 focus:border-slate-300 focus:outline-none text-xs text-slate-500 text-center leading-relaxed italic resize-none rounded px-2 print:hidden min-h-[60px]"
+                          />
                         )}
 
                         <div className="w-16 h-1 bg-slate-200 mx-auto rounded-full"></div>
 
                         {/* Large pricing tag */}
-                        <div className="space-y-1">
+                        <div className="space-y-1 w-full">
                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Giá bán lẻ đề xuất</p>
-                          <p className="text-3xl font-black text-rose-600 font-mono tracking-tight">
-                            {selectedProduct.price.toLocaleString("vi-VN")} đ <span className="text-base text-slate-500 font-normal">/ {selectedProduct.unit}</span>
-                          </p>
+                          <div className="flex items-center justify-center gap-1">
+                            <span className={`${isExporting ? "block" : "hidden"} print:block text-3xl font-black text-rose-600 font-mono tracking-tight`}>
+                              {selectedProduct.price.toLocaleString("vi-VN")} đ <span className="text-base text-slate-500 font-normal">/ {selectedProduct.unit}</span>
+                            </span>
+                            {!isExporting && (
+                              <div className="flex items-center justify-center text-3xl font-black text-rose-600 font-mono print:hidden">
+                                <input
+                                  type="text"
+                                  value={selectedProduct.price.toLocaleString("vi-VN")}
+                                  onChange={(e) => handleInlineEditProduct(selectedProduct.id, "price", e.target.value)}
+                                  className="w-40 bg-transparent border border-transparent hover:border-slate-200 text-right focus:outline-none rounded px-1 font-bold font-mono text-3xl text-rose-600"
+                                />
+                                <span className="ml-1 text-2xl">đ</span>
+                                <span className="text-slate-400 font-normal text-xl mx-2">/</span>
+                                <input
+                                  type="text"
+                                  value={selectedProduct.unit}
+                                  onChange={(e) => handleInlineEditProduct(selectedProduct.id, "unit", e.target.value)}
+                                  className="w-16 bg-transparent border border-transparent hover:border-slate-200 text-left focus:outline-none rounded px-1 font-normal text-base text-slate-500"
+                                />
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
 
