@@ -57,6 +57,8 @@ interface Product {
   unit: string;
   image: string;
   isCustomImage?: boolean;
+  originalImage?: string;
+  isBgRemoved?: boolean;
   // Image Enhancements
   brightness: number;
   contrast: number;
@@ -84,15 +86,214 @@ interface GeneralInfo {
 }
 
 // Render Gama interlocking new logo at module level
-const GamaInterlockLogo = ({ size = 48, className = "" }: { size?: number; className?: string }) => (
-  <img 
-    src="/logos/logo-mark.png" 
-    alt="Gama Logo" 
-    crossOrigin="anonymous"
-    className={className} 
-    style={{ height: size, width: 'auto', objectFit: 'contain' }}
-  />
-);
+const GamaInterlockLogo = ({ 
+  size = 48, 
+  variant = "mark", 
+  className = "" 
+}: { 
+  size?: number; 
+  variant?: "mark" | "horizontal" | "vertical"; 
+  className?: string; 
+}) => {
+  const src = variant === "horizontal" 
+    ? "/logos/logo-horizontal.png" 
+    : variant === "vertical" 
+    ? "/logos/logo-vertical.png" 
+    : "/logos/logo-mark.png";
+
+  return (
+    <img 
+      src={src} 
+      alt="Gama Logo" 
+      crossOrigin="anonymous"
+      className={className} 
+      style={{ height: size, width: 'auto', objectFit: 'contain' }}
+    />
+  );
+};
+
+// Canvas-based client-side background removal helper (chroma keying/background color subtraction)
+const removeImageBackground = (base64Str: string, tolerance = 35): Promise<string> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        resolve(base64Str);
+        return;
+      }
+      ctx.drawImage(img, 0, 0);
+      try {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        // Sample the four corner pixels to detect the background color
+        const corners = [
+          { r: data[0], g: data[1], b: data[2] }, // Top-Left
+          { r: data[(canvas.width - 1) * 4], g: data[(canvas.width - 1) * 4 + 1], b: data[(canvas.width - 1) * 4 + 2] }, // Top-Right
+          { r: data[(canvas.height - 1) * canvas.width * 4], g: data[(canvas.height - 1) * canvas.width * 4 + 1], b: data[(canvas.height - 1) * canvas.width * 4 + 2] }, // Bottom-Left
+          { r: data[((canvas.height - 1) * canvas.width + canvas.width - 1) * 4], g: data[((canvas.height - 1) * canvas.width + canvas.width - 1) * 4 + 1], b: data[((canvas.height - 1) * canvas.width + canvas.width - 1) * 4 + 2] } // Bottom-Right
+        ];
+
+        // Average the corners to find the background color
+        const bgR = Math.round(corners.reduce((sum, c) => sum + c.r, 0) / 4);
+        const bgG = Math.round(corners.reduce((sum, c) => sum + c.g, 0) / 4);
+        const bgB = Math.round(corners.reduce((sum, c) => sum + c.b, 0) / 4);
+
+        // Scan all pixels and clear background pixels
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          
+          // Calculate Euclidean distance in color space
+          const dist = Math.sqrt(
+            Math.pow(r - bgR, 2) + 
+            Math.pow(g - bgG, 2) + 
+            Math.pow(b - bgB, 2)
+          );
+
+          if (dist < tolerance) {
+            // Set alpha to 0 (transparent)
+            data[i + 3] = 0;
+          }
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+        resolve(canvas.toDataURL("image/png"));
+      } catch (e) {
+        console.error("Canvas read error:", e);
+        resolve(base64Str);
+      }
+    };
+    img.onerror = () => {
+      resolve(base64Str);
+    };
+    img.src = base64Str;
+  });
+};
+
+// Compress and resize base64 images client-side to fit within storage limits (max 800px longest side)
+const resizeBase64Image = (base64Str: string, maxDim = 800): Promise<string> => {
+  return new Promise((resolve) => {
+    if (!base64Str.startsWith("data:image")) {
+      resolve(base64Str);
+      return;
+    }
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        resolve(base64Str);
+        return;
+      }
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = () => {
+      resolve(base64Str);
+    };
+    img.src = base64Str;
+  });
+};
+
+// Client-side masking helper to clip a base64 image using normalized polygon coordinates from Gemini AI
+const maskImageWithPolygon = (base64Str: string, points: { x: number; y: number }[]): Promise<string> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        resolve(base64Str);
+        return;
+      }
+
+      ctx.beginPath();
+      points.forEach((p, idx) => {
+        const px = (p.x / 1000) * canvas.width;
+        const py = (p.y / 1000) * canvas.height;
+        if (idx === 0) {
+          ctx.moveTo(px, py);
+        } else {
+          ctx.lineTo(px, py);
+        }
+      });
+      ctx.closePath();
+      
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      
+      ctx.clip();
+      ctx.drawImage(img, 0, 0);
+
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = () => {
+      resolve(base64Str);
+    };
+    img.src = base64Str;
+  });
+};
+
+// Orchestrator to request AI segmentation mask from Gemini and apply canvas clip
+const removeBgUsingGeminiAI = async (base64Str: string): Promise<string> => {
+  try {
+    const cleanBase64 = base64Str.split(",")[1] || base64Str;
+    const mimeType = base64Str.split(";")[0].split(":")[1] || "image/jpeg";
+
+    const res = await fetch("/api/gemini/remove-bg", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        imageBase64: cleanBase64,
+        mimeType: mimeType
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error("Không thể kết nối đến máy chủ AI.");
+    }
+
+    const data = await res.json();
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    if (data.points && Array.isArray(data.points) && data.points.length > 0) {
+      return await maskImageWithPolygon(base64Str, data.points);
+    }
+
+    return base64Str;
+  } catch (err) {
+    console.error("Gemini AI background removal error:", err);
+    throw err;
+  }
+};
 
 // ==========================================
 // Sample Data matching user's Reference Image
@@ -373,9 +574,36 @@ function PageContent() {
 
       if (savedProducts) {
         try {
-          const parsed = JSON.parse(savedProducts);
+          const parsed = JSON.parse(savedProducts) as Product[];
+          
+          // Asynchronously migrate and optimize any legacy large images in local storage
+          const optimizeLoadedProducts = async () => {
+            let needsSave = false;
+            const optimized = await Promise.all(parsed.map(async p => {
+              if (p.image && p.image.startsWith("data:image") && p.image.length > 200000) {
+                try {
+                  const resized = await resizeBase64Image(p.image, 800);
+                  needsSave = true;
+                  return { ...p, image: resized, originalImage: undefined };
+                } catch (err) {
+                  return p;
+                }
+              }
+              return p;
+            }));
+            
+            if (needsSave) {
+              setProducts(optimized);
+              try {
+                const sanitized = optimized.map(({ originalImage, ...rest }) => rest);
+                localStorage.setItem("gama_quote_products", JSON.stringify(sanitized));
+              } catch (err) {}
+            }
+          };
+
           setProducts(parsed);
           if (parsed.length > 0) setSelectedProductId(parsed[0].id);
+          optimizeLoadedProducts();
         } catch (e) {
           setProducts(sampleProducts);
           setSelectedProductId(sampleProducts[0].id);
@@ -417,7 +645,19 @@ function PageContent() {
   // Sync state to local storage on edits
   useEffect(() => {
     if (isLoaded.current) {
-      localStorage.setItem("gama_quote_products", JSON.stringify(products));
+      try {
+        // Strip originalImage to save substantial storage footprint inside localStorage
+        const sanitizedProducts = products.map(({ originalImage, ...rest }) => rest);
+        localStorage.setItem("gama_quote_products", JSON.stringify(sanitizedProducts));
+      } catch (err: any) {
+        console.error("Local storage sync error:", err);
+        if (err.name === "QuotaExceededError" || err.code === 22) {
+          triggerNotification(
+            "Bộ nhớ trình duyệt đầy! Hãy xóa bớt sản phẩm cũ hoặc tải ảnh có dung lượng nhỏ hơn.",
+            "error"
+          );
+        }
+      }
     }
   }, [products]);
 
@@ -535,19 +775,37 @@ function PageContent() {
   // Handle uploading product image
   const handleImageUpload = (id: string, file: File) => {
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       if (e.target?.result) {
+        let rawBase64 = e.target.result as string;
+        
+        triggerNotification("Đang xử lý tối ưu hóa dung lượng ảnh...", "info");
+        // Resize to maximum 800px to optimize storage footprint
+        rawBase64 = await resizeBase64Image(rawBase64, 800);
+        
+        // Remove background automatically upon upload
+        triggerNotification("Đang tự động tách nền bằng AI...", "info");
+        let processedBase64 = rawBase64;
+        try {
+          processedBase64 = await removeBgUsingGeminiAI(rawBase64);
+        } catch (err) {
+          console.warn("AI background removal failed, falling back to chroma keying...", err);
+          processedBase64 = await removeImageBackground(rawBase64, 35);
+        }
+        
         setProducts(prev => prev.map(p => {
           if (p.id === id) {
             return {
               ...p,
-              image: e.target!.result as string,
+              image: processedBase64,
+              originalImage: rawBase64,
+              isBgRemoved: true,
               isCustomImage: true
             };
           }
           return p;
         }));
-        triggerNotification("Đã tải ảnh lên thành công. Có thể căn chỉnh ở tab 'Xử lý hình ảnh'!", "success");
+        triggerNotification("Đã tải ảnh & tự động tách nền thành công!", "success");
       }
     };
     reader.readAsDataURL(file);
@@ -1343,6 +1601,64 @@ function PageContent() {
                       </div>
                     </div>
 
+                    {/* Background Removal Tools */}
+                    {selectedProduct.isCustomImage && (
+                      <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Tách nền tự động (AI-Chroma)</h3>
+                          <span className={`text-[8px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full border ${selectedProduct.isBgRemoved ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-slate-50 text-slate-500 border-slate-200"}`}>
+                            {selectedProduct.isBgRemoved ? "Đã tách nền" : "Chưa tách nền"}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-slate-500 leading-normal">Thuật toán tự động phát hiện và xóa sạch màu nền dựa trên các góc của hình ảnh sản phẩm.</p>
+                        
+                        <div className="flex gap-2">
+                          <button
+                            onClick={async () => {
+                              const original = selectedProduct.originalImage || selectedProduct.image;
+                              triggerNotification("Đang tách nền bằng AI...", "info");
+                              let removed = original;
+                              try {
+                                removed = await removeBgUsingGeminiAI(original);
+                              } catch (err) {
+                                console.warn("AI background removal failed, falling back to chroma keying...", err);
+                                removed = await removeImageBackground(original, 35);
+                              }
+                              setProducts(prev => prev.map(p => {
+                                if (p.id === selectedProduct.id) {
+                                  return { ...p, image: removed, originalImage: original, isBgRemoved: true };
+                                }
+                                return p;
+                              }));
+                              triggerNotification("Tách nền thành công!", "success");
+                            }}
+                            className="flex-1 py-1.5 bg-[#0D5235] hover:bg-[#0D5235]/90 text-white text-[10px] font-bold rounded-lg transition-all shadow-sm flex items-center justify-center gap-1"
+                          >
+                            <span>Xóa nền tự động</span>
+                          </button>
+                          
+                          {(selectedProduct.originalImage || selectedProduct.isBgRemoved) && (
+                            <button
+                              onClick={() => {
+                                if (selectedProduct.originalImage) {
+                                  setProducts(prev => prev.map(p => {
+                                    if (p.id === selectedProduct.id) {
+                                      return { ...p, image: selectedProduct.originalImage!, isBgRemoved: false };
+                                    }
+                                    return p;
+                                  }));
+                                  triggerNotification("Đã khôi phục nền gốc của ảnh!", "info");
+                                }
+                              }}
+                              className="py-1.5 px-3 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 text-[10px] font-bold rounded-lg border border-slate-200 hover:border-slate-300 transition-all flex items-center justify-center gap-1"
+                            >
+                              <span>Khôi phục nền</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
                     {/* Brightness, Contrast, Saturation sliders */}
                     <div className="space-y-4 bg-slate-50/50 p-4 rounded-xl border border-slate-200">
                       <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Thông số điều chỉnh ảnh</h3>
@@ -1892,15 +2208,44 @@ function PageContent() {
               {template === "bento" && (
                 <div className="space-y-6 flex flex-col justify-between h-full min-h-[275mm]">
                   
-                  {/* Elegant Header Banner */}
-                  <div className="text-center space-y-2 pb-6 border-b border-slate-100">
-                    <div className="inline-flex items-center justify-center bg-white p-3 rounded-2xl mb-2 border border-slate-200/60 shadow-sm">
-                      <GamaInterlockLogo size={48} />
+                  {/* Redesigned Premium Bento Header Card */}
+                  <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm mb-4 flex flex-col sm:flex-row items-center justify-between gap-6">
+                    {/* Decorative color accents */}
+                    <div className="absolute top-0 left-0 w-full h-[4px]" style={{ backgroundColor: colors.primary }}></div>
+                    <div className="absolute top-[4px] left-0 w-full h-[2px]" style={{ backgroundColor: colors.secondary }}></div>
+                    
+                    {/* Left: Brand logo frame & company detail */}
+                    <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+                      <div className="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/50 flex items-center justify-center shadow-inner shrink-0">
+                        <GamaInterlockLogo size={54} />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                          <span className="text-[8px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full font-mono" style={{ backgroundColor: `${colors.primary}12`, color: colors.primary }}>
+                            {generalInfo.brandAccent} BRAND SHOWCASE
+                          </span>
+                          <span className="text-[8px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200/80 font-mono">
+                            Visual Catalogue
+                          </span>
+                        </div>
+                        <h2 className="text-lg font-black font-display tracking-tight text-slate-900 leading-tight uppercase max-w-md">
+                          {generalInfo.title}
+                        </h2>
+                        <p className="text-[10px] text-slate-400 font-bold">{generalInfo.companyName}</p>
+                      </div>
                     </div>
-                    <h2 className="text-2xl font-black font-display tracking-tight text-slate-950 uppercase">
-                      CATALOGUE BÁO GIÁ {generalInfo.brandAccent}
-                    </h2>
-                    <p className="text-xs text-slate-400 font-mono">{generalInfo.date}</p>
+
+                    {/* Right: Date, rep & meta info badge */}
+                    <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-4 pt-4 sm:pt-0 border-t sm:border-t-0 sm:border-l border-slate-100 w-full sm:w-auto sm:pl-6 text-slate-500 font-mono text-[10px]">
+                      <div className="space-y-0.5 text-left sm:text-right">
+                        <p className="text-slate-400 uppercase text-[8px] font-bold font-sans tracking-widest">Ngày phát hành</p>
+                        <p className="font-bold text-slate-800 text-[11px]">{generalInfo.date}</p>
+                      </div>
+                      <div className="space-y-0.5 text-right hidden sm:block mt-1">
+                        <p className="text-slate-400 uppercase text-[8px] font-bold font-sans tracking-widest">Đại diện bán hàng</p>
+                        <p className="font-bold text-slate-700">{generalInfo.saleRepName}</p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Bento Grid layout */}

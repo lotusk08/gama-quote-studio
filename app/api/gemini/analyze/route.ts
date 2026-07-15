@@ -39,25 +39,53 @@ export async function POST(req: NextRequest) {
       },
     };
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: [imagePart, { text: prompt }],
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            productCode: { type: Type.STRING, description: "Mã sản phẩm đề xuất, viết hoa liền nhau" },
-            productName: { type: Type.STRING, description: "Tên hàng hóa chi tiết, viết hoa chữ cái đầu, ví dụ: Bộ tay xịt vệ sinh dây inox cao cấp" },
-            brand: { type: Type.STRING, description: "Thương hiệu, phải chọn đúng 1 trong 3: GAMA, Lendo, Ares" },
-            price: { type: Type.NUMBER, description: "Giá bán đề xuất bằng số nguyên VNĐ" },
-            unit: { type: Type.STRING, description: "Đơn vị tính, thường là Bộ hoặc Cái" },
-            description: { type: Type.STRING, description: "Mô tả chất liệu, thiết kế nổi bật phát hiện được" },
+    const modelsToTry = [
+      "gemini-2.0-flash-lite",
+      "gemini-1.5-flash-latest",
+      "gemini-2.0-flash",
+      "gemini-3.5-flash",
+      "gemini-2.0-flash-exp",
+      "gemini-1.5-pro-latest",
+      "gemini-1.5-flash-002"
+    ];
+
+    let response;
+    let lastError;
+
+    for (const modelName of modelsToTry) {
+      try {
+        response = await ai.models.generateContent({
+          model: modelName,
+          contents: [imagePart, { text: prompt }],
+          config: {
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                productCode: { type: Type.STRING, description: "Mã sản phẩm đề xuất, viết hoa liền nhau" },
+                productName: { type: Type.STRING, description: "Tên hàng hóa chi tiết, viết hoa chữ cái đầu, ví dụ: Bộ tay xịt vệ sinh dây inox cao cấp" },
+                brand: { type: Type.STRING, description: "Thương hiệu, phải chọn đúng 1 trong 3: GAMA, Lendo, Ares" },
+                price: { type: Type.NUMBER, description: "Giá bán đề xuất bằng số nguyên VNĐ" },
+                unit: { type: Type.STRING, description: "Đơn vị tính, thường là Bộ hoặc Cái" },
+                description: { type: Type.STRING, description: "Mô tả chất liệu, thiết kế nổi bật phát hiện được" },
+              },
+              required: ["productCode", "productName", "brand", "price", "unit"],
+            },
           },
-          required: ["productCode", "productName", "brand", "price", "unit"],
-        },
-      },
-    });
+        });
+        if (response) break;
+      } catch (err: any) {
+        console.warn(`Model ${modelName} in analysis API failed, trying next. Error:`, err.message || err);
+        lastError = err;
+      }
+    }
+
+    if (!response) {
+      return NextResponse.json(
+        { error: `Tất cả mô hình Gemini đều bận. Chi tiết lỗi: ${lastError?.message || "Service Unavailable"}` },
+        { status: 503 }
+      );
+    }
 
     const resultText = response.text;
     if (!resultText) {
