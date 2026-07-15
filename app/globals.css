@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@media print {
+  /* Hide UI elements during print */
+  header,
+  footer,
+  aside,
+  section:first-of-type,
+  .no-print,
+  button,
+  input[type="file"],
+  select,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Reset main layouts to simple blocks */
+  body,
+  main,
+  section {
+    background: white !important;
+    color: black !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  /* Reset the scaling and alignment of the preview wrapper */
+  .origin-top {
+    transform: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  /* Keep the A4 template centered, solid, and without shadows */
+  #quotation-preview {
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 auto !important;
+    padding: 20mm 15mm !important; /* standard print padding */
+    width: 210mm !important;
+    min-height: 297mm !important;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+}
