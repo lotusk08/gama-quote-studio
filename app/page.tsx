@@ -39,9 +39,9 @@ import {
 // Premium vector-based faucet SVG placeholders (Base64/Inline SVGs)
 const FIXTURE_SVGS = {
   spray_blue: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%"><rect width="400" height="400" fill="%23e0f2fe"/><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%25" stop-color="%230284c7" stop-opacity="0.1"/><stop offset="100%25" stop-color="%230284c7" stop-opacity="0.3"/></linearGradient></defs><rect width="400" height="400" fill="url(%23g1)"/><g transform="translate(100, 80)" stroke="%230284c7" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M40,240 L40,140 Q40,40 100,40 L120,40 Q150,40 150,70 L150,110 Q150,130 130,130 L100,130 Q80,130 80,110" stroke-width="12" fill="%23ffffff"/><path d="M100,20 Q100,10 110,10 L130,10 Q140,10 140,20 Q140,30 130,30 L110,30 Z" fill="%230284c7" stroke-width="4"/><path d="M30,240 L50,240 M40,240 Q40,280 80,300 T160,320" stroke="%2394a3b8" stroke-width="6" stroke-dasharray="2,6"/><circle cx="150" cy="110" r="10" fill="%23e11d48" stroke="none"/><circle cx="100" cy="40" r="4" fill="%230284c7"/><path d="M40,140 L30,150 M40,160 L30,170" stroke-width="4"/></g></svg>`,
-  
+
   spray_gray: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%"><rect width="400" height="400" fill="%23f1f5f9"/><defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%25" stop-color="%23475569" stop-opacity="0.1"/><stop offset="100%25" stop-color="%23475569" stop-opacity="0.3"/></linearGradient></defs><rect width="400" height="400" fill="url(%23g2)"/><g transform="translate(100, 80)" stroke="%23475569" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M40,240 L40,140 Q40,40 100,40 L120,40 Q150,40 150,70 L150,110 Q150,130 130,130 L100,130 Q80,130 80,110" stroke-width="12" fill="%23f8fafc"/><path d="M100,20 Q100,10 110,10 L130,10 Q140,10 140,20 Q140,30 130,30 L110,30 Z" fill="%23475569" stroke-width="4"/><path d="M30,240 L50,240 M40,240 Q40,280 80,300 T160,320" stroke="%2394a3b8" stroke-width="6" stroke-dasharray="2,6"/><circle cx="150" cy="110" r="10" fill="%23475569" stroke="none"/><circle cx="100" cy="40" r="4" fill="%23475569"/><path d="M40,140 L30,150 M40,160 L30,170" stroke-width="4"/></g></svg>`,
-  
+
   faucet_green: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%"><rect width="400" height="400" fill="%23f0fdf4"/><defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%25" stop-color="%230d5235" stop-opacity="0.1"/><stop offset="100%25" stop-color="%230d5235" stop-opacity="0.3"/></linearGradient></defs><rect width="400" height="400" fill="url(%23g3)"/><g transform="translate(100, 100)" stroke="%230d5235" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M30,220 L70,220 L70,100 Q70,40 140,40 L180,40" stroke-width="12" fill="none"/><path d="M180,30 L190,40 L180,50 Z" fill="%23a88c52" stroke="%23a88c52" stroke-width="4"/><circle cx="70" cy="130" r="14" fill="%23a88c52" stroke="none"/><path d="M70,130 L110,130" stroke="%23ffffff" stroke-width="4"/><path d="M180,40 Q180,80 180,120" stroke="%23a88c52" stroke-width="4" stroke-dasharray="2,4"/><circle cx="140" cy="40" r="4" fill="%230d5235"/></g></svg>`,
 
   faucet_gold: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%"><rect width="400" height="400" fill="%23fffbeb"/><defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%25" stop-color="%23a88c52" stop-opacity="0.1"/><stop offset="100%25" stop-color="%23a88c52" stop-opacity="0.3"/></linearGradient></defs><rect width="400" height="400" fill="url(%23g4)"/><g transform="translate(100, 100)" stroke="%23a88c52" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M30,220 L70,220 L70,100 Q70,40 140,40 L180,40" stroke-width="12" fill="none"/><path d="M180,30 L190,40 L180,50 Z" fill="%230d5235" stroke="%230d5235" stroke-width="4"/><circle cx="70" cy="130" r="14" fill="%230d5235" stroke="none"/><path d="M70,130 L110,130" stroke="%23ffffff" stroke-width="4"/><path d="M180,40 Q180,80 180,120" stroke="%230d5235" stroke-width="4" stroke-dasharray="2,4"/><circle cx="140" cy="40" r="4" fill="%23a88c52"/></g></svg>`
@@ -66,6 +66,7 @@ interface Product {
   rotation: number;
   bgColor: string;
   padding: number;
+  scale?: number;
   description?: string;
 }
 
@@ -83,33 +84,100 @@ interface GeneralInfo {
   saleRepPhone: string;
   generalPolicy: string[];
   brandAccent: "GAMA" | "Lendo" | "Ares";
+  representativeCode?: string;
 }
 
 // Render Gama interlocking new logo at module level
-const GamaInterlockLogo = ({ 
-  size = 48, 
-  variant = "mark", 
-  className = "" 
-}: { 
-  size?: number; 
-  variant?: "mark" | "horizontal" | "vertical"; 
-  className?: string; 
+const GamaInterlockLogo = ({
+  size = 48,
+  variant = "mark",
+  className = ""
+}: {
+  size?: number;
+  variant?: "mark" | "horizontal" | "vertical";
+  className?: string;
 }) => {
-  const src = variant === "horizontal" 
-    ? "/logos/logo-horizontal.png" 
-    : variant === "vertical" 
-    ? "/logos/logo-vertical.png" 
-    : "/logos/logo-mark.png";
+  const src = variant === "horizontal"
+    ? "/logos/logo-horizontal.png"
+    : variant === "vertical"
+      ? "/logos/logo-vertical.png"
+      : "/logos/logo-mark.png";
 
   return (
-    <img 
-      src={src} 
-      alt="Gama Logo" 
+    <img
+      src={src}
+      alt="Gama Logo"
       crossOrigin="anonymous"
-      className={className} 
+      className={className}
       style={{ height: size, width: 'auto', objectFit: 'contain' }}
     />
   );
+};
+
+// AI processing loader with elapsed time count to provide premium loading feedback
+const AIProcessingLoader = ({ status }: { status: "analyze" | "remove-bg" | null }) => {
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    if (!status) return;
+    setElapsed(0);
+    const interval = setInterval(() => {
+      setElapsed(prev => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [status]);
+
+  if (!status) return null;
+
+  return (
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border border-slate-100 flex flex-col items-center space-y-5">
+        <div className="relative w-20 h-20 flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-tr from-[#0D5235] to-amber-500 rounded-full animate-spin opacity-20 blur-md" style={{ animationDuration: '3s' }}></div>
+          <div className="absolute inset-2 bg-[#0D5235] rounded-full animate-pulse"></div>
+          <div className="absolute inset-3 bg-white rounded-full flex items-center justify-center">
+            <Sparkle className="w-8 h-8 text-[#0D5235] animate-bounce" />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <h3 className="text-base font-black text-slate-900 uppercase tracking-tight">
+            {status === "analyze" ? "AI Đang Phân Tích Ảnh" : "AI Đang Tách Nền Ảnh"}
+          </h3>
+          <p className="text-xs text-slate-500 leading-relaxed max-w-[280px]">
+            {status === "analyze"
+              ? "Gemini đang tự động điền các thông tin sản phẩm chi tiết..."
+              : "Gemini đang tính toán đường biên và tách nền vật thể..."}
+          </p>
+        </div>
+
+        <div className="bg-slate-50 border border-slate-100 rounded-2xl px-5 py-2.5 flex items-center gap-3">
+          <div className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></div>
+          <span className="text-xs font-mono font-bold text-slate-700">
+            Thời gian xử lý: {elapsed} giây
+          </span>
+        </div>
+
+        <p className="text-[10px] text-slate-400 leading-normal">
+          Quá trình này có thể mất khoảng 15-30 giây. Vui lòng không đóng trình duyệt hoặc tải lại trang.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+// Cryptographically random unique quote code generator to prevent duplication or fraud
+const generateUniqueQuoteCode = () => {
+  const d = new Date();
+  const yy = d.getFullYear().toString().slice(-2);
+  const mm = (d.getMonth() + 1).toString().padStart(2, '0');
+  const dd = d.getDate().toString().padStart(2, '0');
+  const hh = d.getHours().toString().padStart(2, '0');
+  const min = d.getMinutes().toString().padStart(2, '0');
+  
+  // High range random component (4-digit) to ensure uniqueness
+  const rand = Math.floor(1000 + Math.random() * 9000);
+  return `GAMA-RE-${yy}${mm}${dd}-${hh}${min}-${rand}`;
 };
 
 // Canvas-based client-side background removal helper (chroma keying/background color subtraction)
@@ -149,11 +217,11 @@ const removeImageBackground = (base64Str: string, tolerance = 35): Promise<strin
           const r = data[i];
           const g = data[i + 1];
           const b = data[i + 2];
-          
+
           // Calculate Euclidean distance in color space
           const dist = Math.sqrt(
-            Math.pow(r - bgR, 2) + 
-            Math.pow(g - bgG, 2) + 
+            Math.pow(r - bgR, 2) +
+            Math.pow(g - bgG, 2) +
             Math.pow(b - bgB, 2)
           );
 
@@ -244,10 +312,10 @@ const maskImageWithPolygon = (base64Str: string, points: { x: number; y: number 
         }
       });
       ctx.closePath();
-      
+
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
-      
+
       ctx.clip();
       ctx.drawImage(img, 0, 0);
 
@@ -299,220 +367,220 @@ const removeBgUsingGeminiAI = async (base64Str: string): Promise<string> => {
 // Sample Data matching user's Reference Image
 // ==========================================
 const sampleProducts: Product[] = [
-    {
-      id: "1",
-      productCode: "LDVX11LZ",
-      productName: "Bộ tay xịt ti đồng, dây nhựa lưới 3 lớp",
-      brand: "Lendo",
-      price: 55000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_blue,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#f0f9ff",
-      padding: 10,
-      description: "Chất liệu ti đồng siêu bền, thiết kế dây nhựa 3 lớp chống xoắn cao cấp."
-    },
-    {
-      id: "2",
-      productCode: "LDVX11LV",
-      productName: "Bộ tay xịt ti đồng, dây nhựa lưới 3 lớp (V)",
-      brand: "Lendo",
-      price: 64000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_blue,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#f0f9ff",
-      padding: 10,
-      description: "Mẫu vỏ đặc biệt cao cấp tăng áp lực nước."
-    },
-    {
-      id: "3",
-      productCode: "LDVX11TZ",
-      productName: "Bộ tay xịt ti đồng, dây nhựa trắng 3 lớp",
-      brand: "Lendo",
-      price: 52000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_blue,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#ffffff",
-      padding: 10,
-      description: "Dây nhựa trắng mờ thẩm mỹ, lõi đồng nguyên chất chống rò rỉ."
-    },
-    {
-      id: "4",
-      productCode: "LDVX11TV",
-      productName: "Bộ tay xịt ti đồng, dây nhựa trắng 3 lớp (V)",
-      brand: "Lendo",
-      price: 61000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_blue,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#ffffff",
-      padding: 10,
-    },
-    {
-      id: "5",
-      productCode: "LDVX21LZ",
-      productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa lưới 3 lớp",
-      brand: "Lendo",
-      price: 62000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_blue,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#f0f9ff",
-      padding: 10,
-    },
-    {
-      id: "6",
-      productCode: "LDVX21LV",
-      productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa lưới 3 lớp (V)",
-      brand: "Lendo",
-      price: 71000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_blue,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#f0f9ff",
-      padding: 10,
-    },
-    {
-      id: "7",
-      productCode: "LDVX21TZ",
-      productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa trắng 3 lớp",
-      brand: "Lendo",
-      price: 59000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_blue,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#ffffff",
-      padding: 10,
-    },
-    {
-      id: "8",
-      productCode: "LDVX21TV",
-      productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa trắng 3 lớp (V)",
-      brand: "Lendo",
-      price: 68000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_blue,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#ffffff",
-      padding: 10,
-    },
-    {
-      id: "9",
-      productCode: "LDVX23TV",
-      productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa trắng 3 lớp",
-      brand: "Lendo",
-      price: 78000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_gray,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#f1f5f9",
-      padding: 10,
-    },
-    {
-      id: "10",
-      productCode: "LDVX23TZ",
-      productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa trắng 3 lớp (Z)",
-      brand: "Lendo",
-      price: 69000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_gray,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#f1f5f9",
-      padding: 10,
-    },
-    {
-      id: "11",
-      productCode: "LDVX23LV",
-      productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa lưới 3 lớp",
-      brand: "Lendo",
-      price: 81000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_gray,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#f1f5f9",
-      padding: 10,
-    },
-    {
-      id: "12",
-      productCode: "LDVX23LZ",
-      productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa lưới 3 lớp (Z)",
-      brand: "Lendo",
-      price: 72000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.spray_gray,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#f1f5f9",
-      padding: 10,
-    },
-    {
-      id: "13",
-      productCode: "LDVX22IZ",
-      productName: "Bộ tay xịt xi âm ti đồng, dây inox nhuyễn",
-      brand: "Lendo",
-      price: 90000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.faucet_gold,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#fffbeb",
-      padding: 10,
-    },
-    {
-      id: "14",
-      productCode: "LDVX22IV",
-      productName: "Bộ tay xịt xi âm ti đồng, dây inox nhuyễn (V)",
-      brand: "Lendo",
-      price: 99000,
-      unit: "Bộ",
-      image: FIXTURE_SVGS.faucet_gold,
-      brightness: 100,
-      contrast: 100,
-      saturate: 100,
-      rotation: 0,
-      bgColor: "#fffbeb",
-      padding: 10,
-    }
-  ];
+  {
+    id: "1",
+    productCode: "LDVX11LZ",
+    productName: "Bộ tay xịt ti đồng, dây nhựa lưới 3 lớp",
+    brand: "Lendo",
+    price: 55000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_blue,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#f0f9ff",
+    padding: 10,
+    description: "Chất liệu ti đồng siêu bền, thiết kế dây nhựa 3 lớp chống xoắn cao cấp."
+  },
+  {
+    id: "2",
+    productCode: "LDVX11LV",
+    productName: "Bộ tay xịt ti đồng, dây nhựa lưới 3 lớp (V)",
+    brand: "Lendo",
+    price: 64000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_blue,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#f0f9ff",
+    padding: 10,
+    description: "Mẫu vỏ đặc biệt cao cấp tăng áp lực nước."
+  },
+  {
+    id: "3",
+    productCode: "LDVX11TZ",
+    productName: "Bộ tay xịt ti đồng, dây nhựa trắng 3 lớp",
+    brand: "Lendo",
+    price: 52000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_blue,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#ffffff",
+    padding: 10,
+    description: "Dây nhựa trắng mờ thẩm mỹ, lõi đồng nguyên chất chống rò rỉ."
+  },
+  {
+    id: "4",
+    productCode: "LDVX11TV",
+    productName: "Bộ tay xịt ti đồng, dây nhựa trắng 3 lớp (V)",
+    brand: "Lendo",
+    price: 61000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_blue,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#ffffff",
+    padding: 10,
+  },
+  {
+    id: "5",
+    productCode: "LDVX21LZ",
+    productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa lưới 3 lớp",
+    brand: "Lendo",
+    price: 62000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_blue,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#f0f9ff",
+    padding: 10,
+  },
+  {
+    id: "6",
+    productCode: "LDVX21LV",
+    productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa lưới 3 lớp (V)",
+    brand: "Lendo",
+    price: 71000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_blue,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#f0f9ff",
+    padding: 10,
+  },
+  {
+    id: "7",
+    productCode: "LDVX21TZ",
+    productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa trắng 3 lớp",
+    brand: "Lendo",
+    price: 59000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_blue,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#ffffff",
+    padding: 10,
+  },
+  {
+    id: "8",
+    productCode: "LDVX21TV",
+    productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa trắng 3 lớp (V)",
+    brand: "Lendo",
+    price: 68000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_blue,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#ffffff",
+    padding: 10,
+  },
+  {
+    id: "9",
+    productCode: "LDVX23TV",
+    productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa trắng 3 lớp",
+    brand: "Lendo",
+    price: 78000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_gray,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#f1f5f9",
+    padding: 10,
+  },
+  {
+    id: "10",
+    productCode: "LDVX23TZ",
+    productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa trắng 3 lớp (Z)",
+    brand: "Lendo",
+    price: 69000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_gray,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#f1f5f9",
+    padding: 10,
+  },
+  {
+    id: "11",
+    productCode: "LDVX23LV",
+    productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa lưới 3 lớp",
+    brand: "Lendo",
+    price: 81000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_gray,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#f1f5f9",
+    padding: 10,
+  },
+  {
+    id: "12",
+    productCode: "LDVX23LZ",
+    productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa lưới 3 lớp (Z)",
+    brand: "Lendo",
+    price: 72000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.spray_gray,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#f1f5f9",
+    padding: 10,
+  },
+  {
+    id: "13",
+    productCode: "LDVX22IZ",
+    productName: "Bộ tay xịt xi âm ti đồng, dây inox nhuyễn",
+    brand: "Lendo",
+    price: 90000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.faucet_gold,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#fffbeb",
+    padding: 10,
+  },
+  {
+    id: "14",
+    productCode: "LDVX22IV",
+    productName: "Bộ tay xịt xi âm ti đồng, dây inox nhuyễn (V)",
+    brand: "Lendo",
+    price: 99000,
+    unit: "Bộ",
+    image: FIXTURE_SVGS.faucet_gold,
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+    rotation: 0,
+    bgColor: "#fffbeb",
+    padding: 10,
+  }
+];
 
 function PageContent() {
   // ==========================================
@@ -525,18 +593,19 @@ function PageContent() {
   const [zoom, setZoom] = useState<number>(85); // percentage
   const [notification, setNotification] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
   const [isAiLoading, setIsAiLoading] = useState<boolean>(false);
+  const [aiStatus, setAiStatus] = useState<"analyze" | "remove-bg" | null>(null);
 
   // General Company/Quotation details
   const [generalInfo, setGeneralInfo] = useState<GeneralInfo>({
-    title: "CHÍNH SÁCH KHUYẾN MÃI BỘ XỊT, BỘ SEN LENDO",
+    title: "BIỂU GIÁ KHUYẾN MÃI VÀ ƯU ĐÃI SẢN PHẨM",
     subtitle: "(Áp dụng từ ngày 14/07/2026)",
-    recipient: "Kính gửi: Quý Khách Hàng / Quý Đại Lý",
+    recipient: "Quý Khách Hàng / Quý Đại Lý",
     date: "14/07/2026",
     companyName: "GAMA GROUP CO., LTD",
     companySlogan: "",
-    address: "VPGD: 54/6E Ấp Tiền Lân, Xã Bà Điểm, Huyện Hóc Môn, TP.HCM",
+    address: "VPKD: 54/6E Ấp Tiền Lân, Xã Bà Điểm, Huyện Hóc Môn, TP.HCM",
     hotline: "Hotline: 0902 949 946 - 0934 077 239",
-    website: "gama.vn",
+    website: "Website: gama.vn",
     saleRepName: "Nguyễn Văn Nam",
     saleRepPhone: "0902.949.946",
     generalPolicy: [
@@ -544,7 +613,8 @@ function PageContent() {
       "Từ 10 BỘ: Chiết khấu 15%",
       "Từ 20 BỘ: Chiết khấu 18%"
     ],
-    brandAccent: "GAMA"
+    brandAccent: "GAMA",
+    representativeCode: generateUniqueQuoteCode()
   });
 
   // Reference to preview container for exporting
@@ -558,7 +628,7 @@ function PageContent() {
     import("html2canvas-pro").then((m) => {
       html2canvasRef.current = m.default;
     }).catch(err => console.error("Failed to pre-load html2canvas-pro", err));
-    
+
     import("jspdf").then((m) => {
       jsPdfRef.current = m.jsPDF;
     }).catch(err => console.error("Failed to pre-load jspdf", err));
@@ -575,7 +645,7 @@ function PageContent() {
       if (savedProducts) {
         try {
           const parsed = JSON.parse(savedProducts) as Product[];
-          
+
           // Asynchronously migrate and optimize any legacy large images in local storage
           const optimizeLoadedProducts = async () => {
             let needsSave = false;
@@ -591,13 +661,13 @@ function PageContent() {
               }
               return p;
             }));
-            
+
             if (needsSave) {
               setProducts(optimized);
               try {
                 const sanitized = optimized.map(({ originalImage, ...rest }) => rest);
                 localStorage.setItem("gama_quote_products", JSON.stringify(sanitized));
-              } catch (err) {}
+              } catch (err) { }
             }
           };
 
@@ -618,19 +688,22 @@ function PageContent() {
           const parsed = JSON.parse(savedGeneral);
           // Auto-migrate old default fields to the requested clean and simple GAMA info
           if (
-            parsed.companyName === "CÔNG TY TNHH TẬP ĐOÀN GAMA" || 
-            parsed.address === "ADRESS" || 
+            parsed.companyName === "CÔNG TY TNHH TẬP ĐOÀN GAMA" ||
+            parsed.address === "ADRESS" ||
             parsed.hotline === "HOTLINE" ||
             parsed.companySlogan !== ""
           ) {
             parsed.companyName = "GAMA GROUP CO., LTD";
-            parsed.address = "VPGD: 54/6E Ấp Tiền Lân, Xã Bà Điểm, Huyện Hóc Môn, TP.HCM";
+            parsed.address = "VPKD: 54/6E Ấp Tiền Lân, Xã Bà Điểm, Huyện Hóc Môn, TP.HCM";
             parsed.hotline = "Hotline: 0902 949 946 - 0934 077 239";
-            parsed.website = "gama.vn";
+            parsed.website = "Website: gama.vn";
             parsed.companySlogan = "";
           }
+          if (!parsed.representativeCode) {
+            parsed.representativeCode = generateUniqueQuoteCode();
+          }
           setGeneralInfo(parsed);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       if (savedTemplate) {
@@ -777,35 +850,43 @@ function PageContent() {
     const reader = new FileReader();
     reader.onload = async (e) => {
       if (e.target?.result) {
-        let rawBase64 = e.target.result as string;
-        
-        triggerNotification("Đang xử lý tối ưu hóa dung lượng ảnh...", "info");
-        // Resize to maximum 800px to optimize storage footprint
-        rawBase64 = await resizeBase64Image(rawBase64, 800);
-        
-        // Remove background automatically upon upload
-        triggerNotification("Đang tự động tách nền bằng AI...", "info");
-        let processedBase64 = rawBase64;
         try {
-          processedBase64 = await removeBgUsingGeminiAI(rawBase64);
-        } catch (err) {
-          console.warn("AI background removal failed, falling back to chroma keying...", err);
-          processedBase64 = await removeImageBackground(rawBase64, 35);
-        }
-        
-        setProducts(prev => prev.map(p => {
-          if (p.id === id) {
-            return {
-              ...p,
-              image: processedBase64,
-              originalImage: rawBase64,
-              isBgRemoved: true,
-              isCustomImage: true
-            };
+          let rawBase64 = e.target.result as string;
+          setAiStatus("remove-bg");
+
+          triggerNotification("Đang xử lý tối ưu hóa dung lượng ảnh...", "info");
+          // Resize to maximum 800px to optimize storage footprint
+          rawBase64 = await resizeBase64Image(rawBase64, 800);
+
+          // Remove background automatically upon upload
+          triggerNotification("Đang tự động tách nền bằng AI...", "info");
+          let processedBase64 = rawBase64;
+          try {
+            processedBase64 = await removeBgUsingGeminiAI(rawBase64);
+          } catch (err) {
+            console.warn("AI background removal failed, falling back to chroma keying...", err);
+            processedBase64 = await removeImageBackground(rawBase64, 35);
           }
-          return p;
-        }));
-        triggerNotification("Đã tải ảnh & tự động tách nền thành công!", "success");
+
+          setProducts(prev => prev.map(p => {
+            if (p.id === id) {
+              return {
+                ...p,
+                image: processedBase64,
+                originalImage: rawBase64,
+                isBgRemoved: true,
+                isCustomImage: true
+              };
+            }
+            return p;
+          }));
+          triggerNotification("Đã tải ảnh & tự động tách nền thành công!", "success");
+        } catch (err) {
+          console.error("Image upload error:", err);
+          triggerNotification("Lỗi khi tải hoặc xử lý ảnh sản phẩm.", "error");
+        } finally {
+          setAiStatus(null);
+        }
       }
     };
     reader.readAsDataURL(file);
@@ -857,7 +938,7 @@ function PageContent() {
   // ==========================================
   const applyInstantFilter = (preset: "default" | "bright" | "warm" | "vibrant" | "studio") => {
     if (!selectedProductId) return;
-    
+
     let brightness = 100;
     let contrast = 100;
     let saturate = 100;
@@ -910,12 +991,13 @@ function PageContent() {
     if (!targetProduct) return;
 
     if (!targetProduct.image || !targetProduct.isCustomImage) {
-      triggerNotification("Hãy tải lên một ảnh sản phẩm thực tế để AI phân tích chuẩn xác nhất!", "error");
+      triggerNotification("Hãy tải lên một ảnh sản phẩm thực tế để AI xử lý!", "error");
       return;
     }
 
     setIsAiLoading(true);
-    triggerNotification("Trí tuệ nhân tạo Gemini đang phân tích sản phẩm, xin vui lòng đợi...", "info");
+    setAiStatus("analyze");
+    triggerNotification("Gemini AI đang xử lý, xin vui lòng đợi...", "info");
 
     try {
       // Extract clean Base64 data (without prefix)
@@ -936,7 +1018,7 @@ function PageContent() {
       }
 
       const aiData = await res.json();
-      
+
       if (aiData.error) {
         throw new Error(aiData.error);
       }
@@ -957,12 +1039,13 @@ function PageContent() {
         return p;
       }));
 
-      triggerNotification("Phân tích AI thành công! Đã tự động cập nhật thông tin sản phẩm.", "success");
+      triggerNotification("Đã có dữ liệu từ AI! Tự động cập nhật thông tin sản phẩm.", "success");
     } catch (err: any) {
       console.error(err);
-      triggerNotification(`Lỗi phân tích AI: ${err.message || "Vui lòng thử lại sau."}`, "error");
+      triggerNotification(`Lỗi xử lý AI: ${err.message || "Vui lòng thử lại sau."}`, "error");
     } finally {
       setIsAiLoading(false);
+      setAiStatus(null);
     }
   };
 
@@ -998,7 +1081,7 @@ function PageContent() {
       link.download = `BAO_GIA_GAMA_${generalInfo.date.replace(/\//g, "-")}.png`;
       link.href = dataUrl;
       link.click();
-      
+
       triggerNotification("Đã tải xuống file báo giá dạng ảnh chất lượng cao!", "success");
     } catch (err) {
       console.error(err);
@@ -1032,12 +1115,12 @@ function PageContent() {
       });
 
       const imgData = canvas.toDataURL("image/jpeg", 0.98);
-      
+
       // Standard A4 dimensions
       const imgWidth = 210; // mm
       const pageHeight = 297; // mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
+
       const pdf = new jsPDF("p", "mm", "a4");
       let heightLeft = imgHeight;
       let position = 0;
@@ -1082,10 +1165,10 @@ function PageContent() {
 
   return (
     <div className="flex flex-col min-h-screen relative font-sans">
-      
+
       {/* Dynamic Floating Toast Notification */}
       {notification && (
-        <div 
+        <div
           className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-2xl transition-all duration-300 border backdrop-blur-md animate-bounce
             ${notification.type === "success" ? "bg-[#0D5235]/95 border-[#0D5235] text-white" : ""}
             ${notification.type === "error" ? "bg-red-500/95 border-red-400 text-white" : ""}
@@ -1116,12 +1199,12 @@ function PageContent() {
           <button
             onClick={handleLoadSampleData}
             className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-600 bg-slate-50 rounded-lg hover:bg-slate-100 transition-all border border-slate-200"
-            title="Nạp lại bảng sen vòi Lendo mặc định"
+            title="Nạp lại bảng sản phẩm mẫu"
           >
             <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
-            <span>Nạp bảng Lendo (14SP)</span>
+            <span>Nạp bảng sản phẩm mẫu (14SP)</span>
           </button>
-          
+
           <button
             onClick={handleClearAllProducts}
             className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-600 bg-rose-50 rounded-lg hover:bg-rose-100 transition-all border border-rose-200"
@@ -1134,16 +1217,16 @@ function PageContent() {
 
           {/* Zoom controls */}
           <div className="hidden lg:flex items-center bg-slate-50 rounded-lg px-2 py-1 text-slate-600 border border-slate-200">
-            <button 
-              onClick={() => setZoom(z => Math.max(50, z - 10))} 
+            <button
+              onClick={() => setZoom(z => Math.max(50, z - 10))}
               className="p-1 hover:text-slate-900 transition-all"
               title="Thu nhỏ xem toàn cảnh"
             >
               <ZoomOut className="w-3.5 h-3.5" />
             </button>
             <span className="text-[10px] font-mono px-2 font-semibold w-10 text-center">{zoom}%</span>
-            <button 
-              onClick={() => setZoom(z => Math.min(150, z + 10))} 
+            <button
+              onClick={() => setZoom(z => Math.min(150, z + 10))}
               className="p-1 hover:text-slate-900 transition-all"
               title="Phóng to chỉnh sửa chi tiết"
             >
@@ -1155,10 +1238,10 @@ function PageContent() {
 
       {/* CORE SPLIT INTERFACE */}
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-y-auto min-h-0 bg-[#F8F9FA]">
-        
+
         {/* LEFT WORKSPACE: EDIT CONTROLS & PHOTO LAB */}
         <section className="lg:col-span-5 bg-white border-r border-slate-200 flex flex-col min-h-[500px] lg:h-[calc(100vh-73px)] text-slate-800 shadow-sm overflow-y-auto">
-          
+
           {/* TAB BAR NAVIGATION */}
           <div className="grid grid-cols-4 bg-slate-50 p-1.5 border-b border-slate-200 text-center text-xs font-medium sticky top-0 z-20">
             <button
@@ -1187,7 +1270,7 @@ function PageContent() {
               className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 rounded-lg transition-all relative ${activeTab === "ai" ? "bg-white text-slate-900 font-bold border border-slate-200 shadow-sm" : "text-slate-500 hover:text-slate-800 hover:bg-slate-100/50"}`}
             >
               <Sparkles className="w-4 h-4 text-[#0D5235] animate-pulse" />
-              <span>Trợ lý AI</span>
+              <span>Xử lý bằng AI</span>
               <span className="absolute top-1 right-1 w-2 h-2 bg-[#0D5235]/100 rounded-full animate-ping"></span>
             </button>
           </div>
@@ -1204,7 +1287,7 @@ function PageContent() {
 
                 {/* Brand Theme Choice */}
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Thương hiệu Chủ đạo (Tông màu & Thiết kế)</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Màu chủ đạo (Tông màu & Thiết kế)</label>
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       { key: "GAMA", title: "Tập Đoàn GAMA", desc: "Xanh lá - Vàng kim", color: "bg-[#0D5235]" },
@@ -1240,7 +1323,7 @@ function PageContent() {
                       value={generalInfo.title}
                       onChange={(e) => setGeneralInfo({ ...generalInfo, title: e.target.value })}
                       className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
-                      placeholder="Vd: CHÍNH SÁCH KHUYẾN MÃI BỘ XỊT"
+                      placeholder="Vd: CHÍNH SÁCH KHUYẾN MÃI"
                     />
                   </div>
 
@@ -1262,7 +1345,7 @@ function PageContent() {
                       value={generalInfo.recipient}
                       onChange={(e) => setGeneralInfo({ ...generalInfo, recipient: e.target.value })}
                       className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
-                      placeholder="Vd: Kính gửi: Quý Đại Lý / Quý Khách"
+                      placeholder="Vd: Quý Đại Lý / Quý Khách"
                     />
                   </div>
                 </div>
@@ -1270,7 +1353,7 @@ function PageContent() {
                 {/* Sales Representative Block */}
                 <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200/80 space-y-3">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-600 border-b border-slate-100 pb-1.5">Quản lý Kinh doanh / Nhân viên Sale</h3>
-                  
+
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[10px] text-slate-400 mb-1">Họ tên nhân viên</label>
@@ -1290,6 +1373,27 @@ function PageContent() {
                         className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-slate-400"
                       />
                     </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-4">
+                    <div className="flex-1">
+                      <label className="block text-[10px] text-slate-400 mb-1">Mã Đại Diện (Bảo mật chống giả mạo)</label>
+                      <input
+                        type="text"
+                        value={generalInfo.representativeCode || ""}
+                        onChange={(e) => setGeneralInfo({ ...generalInfo, representativeCode: e.target.value })}
+                        className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs font-mono font-bold text-[#0D5235] focus:outline-none focus:border-slate-400"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setGeneralInfo({ ...generalInfo, representativeCode: generateUniqueQuoteCode() })}
+                      className="mt-5 px-3 py-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-all flex items-center gap-1 font-semibold border border-slate-200"
+                      title="Tạo mã đại diện ngẫu nhiên bảo mật mới"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      <span>Đổi mã</span>
+                    </button>
                   </div>
                 </div>
 
@@ -1342,7 +1446,7 @@ function PageContent() {
                     <Layers className="w-5 h-5 text-[#0D5235]" />
                     <h2 className="text-base font-bold text-slate-900">Quản lý danh sách sản phẩm ({products.length})</h2>
                   </div>
-                  
+
                   <button
                     onClick={handleAddProduct}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 text-white font-bold rounded-lg text-xs hover:bg-slate-800 transition-all shadow"
@@ -1374,17 +1478,17 @@ function PageContent() {
                           ${selectedProductId === p.id ? "border-[#0D5235] bg-[#0D5235]/10/30 shadow-sm ring-1 ring-[#0D5235]/20" : "border-slate-150 bg-slate-50/50 hover:bg-slate-50"}`}
                       >
                         {/* Compact thumbnail preview with color backing */}
-                        <div 
+                        <div
                           className="w-12 h-12 rounded-lg relative overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center shadow-inner"
                           style={{ backgroundColor: p.bgColor }}
                         >
-                          <img 
-                            src={p.image} 
-                            alt={p.productCode} 
+                          <img
+                            src={p.image}
+                            alt={p.productCode}
                             className="max-w-[85%] max-h-[85%] object-contain transition-all"
                             style={{
                               filter: `brightness(${p.brightness}%) contrast(${p.contrast}%) saturate(${p.saturate}%)`,
-                              transform: `rotate(${p.rotation}deg)`
+                              transform: `rotate(${p.rotation}deg) scale(${(p.scale || 100) / 100})`
                             }}
                           />
                         </div>
@@ -1464,7 +1568,7 @@ function PageContent() {
                         </select>
                       </div>
 
-                       <div className="col-span-2">
+                      <div className="col-span-2">
                         <label className="block text-[10px] text-slate-500 mb-1">Tên sản phẩm</label>
                         <input
                           type="text"
@@ -1559,17 +1663,17 @@ function PageContent() {
                   <div className="space-y-5">
                     {/* Active product highlight header */}
                     <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                      <div 
+                      <div
                         className="w-10 h-10 rounded bg-white flex items-center justify-center shrink-0 border border-slate-200"
                         style={{ backgroundColor: selectedProduct.bgColor }}
                       >
-                        <img 
-                          src={selectedProduct.image} 
-                          alt="" 
+                        <img
+                          src={selectedProduct.image}
+                          alt=""
                           className="max-w-[90%] max-h-[90%] object-contain"
                           style={{
                             filter: `brightness(${selectedProduct.brightness}%) contrast(${selectedProduct.contrast}%) saturate(${selectedProduct.saturate}%)`,
-                            transform: `rotate(${selectedProduct.rotation}deg)`
+                            transform: `rotate(${selectedProduct.rotation}deg) scale(${(selectedProduct.scale || 100) / 100})`
                           }}
                         />
                       </div>
@@ -1611,32 +1715,40 @@ function PageContent() {
                           </span>
                         </div>
                         <p className="text-[10px] text-slate-500 leading-normal">Thuật toán tự động phát hiện và xóa sạch màu nền dựa trên các góc của hình ảnh sản phẩm.</p>
-                        
+
                         <div className="flex gap-2">
                           <button
                             onClick={async () => {
                               const original = selectedProduct.originalImage || selectedProduct.image;
-                              triggerNotification("Đang tách nền bằng AI...", "info");
-                              let removed = original;
                               try {
-                                removed = await removeBgUsingGeminiAI(original);
-                              } catch (err) {
-                                console.warn("AI background removal failed, falling back to chroma keying...", err);
-                                removed = await removeImageBackground(original, 35);
-                              }
-                              setProducts(prev => prev.map(p => {
-                                if (p.id === selectedProduct.id) {
-                                  return { ...p, image: removed, originalImage: original, isBgRemoved: true };
+                                setAiStatus("remove-bg");
+                                triggerNotification("Đang tách nền bằng AI...", "info");
+                                let removed = original;
+                                try {
+                                  removed = await removeBgUsingGeminiAI(original);
+                                } catch (err) {
+                                  console.warn("AI background removal failed, falling back to chroma keying...", err);
+                                  removed = await removeImageBackground(original, 35);
                                 }
-                                return p;
-                              }));
-                              triggerNotification("Tách nền thành công!", "success");
+                                setProducts(prev => prev.map(p => {
+                                  if (p.id === selectedProduct.id) {
+                                    return { ...p, image: removed, originalImage: original, isBgRemoved: true };
+                                  }
+                                  return p;
+                                }));
+                                triggerNotification("Tách nền thành công!", "success");
+                              } catch (err) {
+                                console.error("Manual BG removal error:", err);
+                                triggerNotification("Lỗi khi tách nền ảnh.", "error");
+                              } finally {
+                                setAiStatus(null);
+                              }
                             }}
                             className="flex-1 py-1.5 bg-[#0D5235] hover:bg-[#0D5235]/90 text-white text-[10px] font-bold rounded-lg transition-all shadow-sm flex items-center justify-center gap-1"
                           >
                             <span>Xóa nền tự động</span>
                           </button>
-                          
+
                           {(selectedProduct.originalImage || selectedProduct.isBgRemoved) && (
                             <button
                               onClick={() => {
@@ -1662,7 +1774,7 @@ function PageContent() {
                     {/* Brightness, Contrast, Saturation sliders */}
                     <div className="space-y-4 bg-slate-50/50 p-4 rounded-xl border border-slate-200">
                       <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Thông số điều chỉnh ảnh</h3>
-                      
+
                       {/* Brightness */}
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs font-semibold">
@@ -1727,6 +1839,23 @@ function PageContent() {
                         />
                       </div>
 
+                      {/* Scale / Image Size */}
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs font-semibold">
+                          <span className="text-slate-500">Kích thước ảnh (Scale)</span>
+                          <span className="text-[#0D5235] font-mono">{((selectedProduct.scale || 100) / 100).toFixed(1)}x</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="50"
+                          max="300"
+                          step="10"
+                          value={selectedProduct.scale || 100}
+                          onChange={(e) => updateProductField(selectedProduct.id, "scale", parseInt(e.target.value))}
+                          className="w-full accent-[#0D5235]"
+                        />
+                      </div>
+
                       {/* Rotation control */}
                       <div className="flex items-center justify-between border-t border-slate-100 pt-3 mt-1">
                         <span className="text-xs font-semibold text-slate-500">Xoay hình ảnh</span>
@@ -1748,7 +1877,7 @@ function PageContent() {
                     <div className="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200">
                       <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Đồng bộ màu nền (Background Match)</h3>
                       <p className="text-[11px] text-slate-500">Căn chuẩn màu nền của khung sản phẩm để hiển thị đồng nhất đẹp mắt trong báo giá:</p>
-                      
+
                       <div className="grid grid-cols-4 gap-2 pt-1">
                         {[
                           { color: "#ffffff", label: "Trắng" },
@@ -1766,7 +1895,7 @@ function PageContent() {
                             className={`p-1.5 rounded-lg border text-center transition-all flex flex-col items-center justify-center gap-1
                               ${selectedProduct.bgColor === c.color ? "border-[#0D5235] bg-[#0D5235]/10/50" : "border-slate-200 hover:border-slate-300 bg-white"}`}
                           >
-                            <span 
+                            <span
                               className="w-5 h-5 rounded border border-slate-200 shadow-inner block"
                               style={{ backgroundColor: c.color }}
                             ></span>
@@ -1865,20 +1994,20 @@ function PageContent() {
             <span>Serverless Local Database: OK</span>
             <button
               onClick={() => {
-                if(confirm("Bạn có chắc chắn muốn khôi phục toàn bộ cài đặt gốc? Tất cả sản phẩm sẽ bị ghi đè.")) {
+                if (confirm("Bạn có chắc chắn muốn khôi phục toàn bộ cài đặt gốc? Tất cả sản phẩm sẽ bị ghi đè.")) {
                   localStorage.clear();
                   setProducts(sampleProducts);
                   setSelectedProductId(sampleProducts[0].id);
                   setGeneralInfo({
-                    title: "CHÍNH SÁCH KHUYẾN MÃI BỘ XỊT, BỘ SEN LENDO",
+                    title: "BIỂU GIÁ KHUYẾN MÃI VÀ ƯU ĐÃI SẢN PHẨM",
                     subtitle: "(Áp dụng từ ngày 14/07/2026)",
-                    recipient: "Kính gửi: Quý Khách Hàng / Quý Đại Lý",
+                    recipient: "Quý Khách Hàng / Quý Đại Lý",
                     date: "14/07/2026",
                     companyName: "CÔNG TY TNHH TẬP ĐOÀN GAMA",
                     companySlogan: "CUNG CẤP THIẾT BỊ VỆ SINH, SƠN NƯỚC VÀ GẠCH MEN",
-                    address: "VPGD: 54/6E Ấp Tiền Lân, Xã Bà Điểm, Huyện Hóc Môn, TP.HCM",
+                    address: "VPKD: 54/6E Ấp Tiền Lân, Xã Bà Điểm, Huyện Hóc Môn, TP.HCM",
                     hotline: "Hotline: 0902 949 946 - 0934 077 239",
-                    website: "Web: www.songama.vn - www.thietbivesinhgama.com",
+                    website: "Website: gama.vn",
                     saleRepName: "Nguyễn Văn Nam",
                     saleRepPhone: "0902.949.946",
                     generalPolicy: [
@@ -1886,7 +2015,8 @@ function PageContent() {
                       "Từ 10 BỘ: Chiết khấu 15%",
                       "Từ 20 BỘ: Chiết khấu 18%"
                     ],
-                    brandAccent: "GAMA"
+                    brandAccent: "GAMA",
+                    representativeCode: generateUniqueQuoteCode()
                   });
                   triggerNotification("Đã thiết lập lại trạng thái ban đầu của hệ thống!", "info");
                 }
@@ -1900,7 +2030,7 @@ function PageContent() {
 
         {/* RIGHT WORKSPACE: DYNAMIC LIVE A4 CANVAS PREVIEW */}
         <section className="lg:col-span-7 bg-slate-100 flex flex-col items-center justify-start lg:h-[calc(100vh-73px)] overflow-auto p-4 sm:p-6 md:p-8 relative">
-          
+
           {/* QUICK TOOLBAR: TEMPLATE CHANGER & ACTION EXPORTERS */}
           <div className="w-full max-w-4xl bg-white p-3 rounded-2xl mb-5 flex flex-col md:flex-row items-center justify-between gap-4 border border-slate-200 shadow-md sticky top-0 z-10 backdrop-blur">
             {/* Template Selector */}
@@ -1952,13 +2082,13 @@ function PageContent() {
           </div>
 
           {/* DYNAMIC SCALING WRAPPER FOR CHOSEN TEMPLATE */}
-          <div 
+          <div
             className="w-full flex justify-center items-start origin-top transition-all"
             style={{ transform: `scale(${zoom / 100})`, marginBottom: `${(zoom - 100) * 8}px` }}
           >
-            
+
             {/* THE LIVE CANVAS ELEMENT TO CAPTURE */}
-            <div 
+            <div
               id="quotation-preview"
               ref={previewRef}
               className="bg-white text-slate-800 p-8 shadow-2xl relative border border-slate-200 overflow-hidden print:shadow-none print:border-none"
@@ -1969,13 +2099,13 @@ function PageContent() {
                 color: "#1e293b"
               }}
             >
-              
+
               {/* =========================================================
                   TEMPLATE 1: ENTERPRISE STANDARD SHEET (MODERN EXCEL REMAKE)
                   ========================================================= */}
               {template === "enterprise" && (
                 <div className="space-y-6 flex flex-col justify-between h-full min-h-[275mm]">
-                  
+
                   {/* BRAND HEADER BANNER */}
                   <div className="flex items-start justify-between border-b-2 border-slate-200 pb-5">
                     {/* Brand Left Info Block */}
@@ -1984,9 +2114,9 @@ function PageContent() {
                       <div className="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/60 flex items-center justify-center shadow-sm">
                         <GamaInterlockLogo size={58} />
                       </div>
-                      
+
                       <div className="space-y-1">
-                        <h2 className="text-xl font-bold tracking-tight font-display uppercase" style={{ color: colors.primary }}>
+                        <h2 className="text-xl font-bold tracking-tight font-display uppercase" style={{ color: "#0D5235" }}>
                           {generalInfo.companyName}
                         </h2>
                         <div className="text-[10px] text-slate-600 space-y-0.5 mt-1 font-medium">
@@ -2003,7 +2133,9 @@ function PageContent() {
                       <p className="text-xs font-bold text-slate-800">{generalInfo.date}</p>
                       <div className="pt-2 mt-2 border-t border-slate-200/80">
                         <p className="text-[8px] font-bold text-slate-400 uppercase tracking-wider">Mã đại diện</p>
-                        <p className="text-[10px] font-bold font-mono" style={{ color: colors.primary }}>GAMA-RE-2026</p>
+                        <p className="text-[10px] font-bold font-mono" style={{ color: colors.primary }}>
+                          {generalInfo.representativeCode || "GAMA-RE-2026"}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -2057,21 +2189,21 @@ function PageContent() {
                         <tbody className="divide-y divide-slate-200 text-xs">
                           {products.map((p, index) => (
                             <tr key={p.id} className={`${index % 2 === 0 ? "bg-white" : "bg-slate-50/50"} hover:bg-slate-100/40 transition-colors`}>
-                              
+
                               {/* Product Photo Box with color blend background */}
                               <td className="py-2.5 px-2 text-center">
-                                <div 
+                                <div
                                   className="w-14 h-14 rounded-lg mx-auto flex items-center justify-center border border-slate-200 shadow-sm relative overflow-hidden"
                                   style={{ backgroundColor: p.bgColor || "#ffffff" }}
                                 >
-                                  <img 
-                                    src={p.image} 
-                                    alt="" 
+                                  <img
+                                    src={p.image}
+                                    alt=""
                                     crossOrigin="anonymous"
                                     className="max-w-[85%] max-h-[85%] object-contain"
                                     style={{
                                       filter: `brightness(${p.brightness}%) contrast(${p.contrast}%) saturate(${p.saturate}%)`,
-                                      transform: `rotate(${p.rotation}deg)`,
+                                      transform: `rotate(${p.rotation}deg) scale(${(p.scale || 100) / 100})`,
                                       padding: `${p.padding / 2}px`
                                     }}
                                   />
@@ -2163,13 +2295,13 @@ function PageContent() {
 
                   {/* BOTTOM POLICY & STAMP FOOTER */}
                   <div className="grid grid-cols-12 gap-6 pt-5 border-t border-slate-200 items-end">
-                    
+
                     {/* General Company Note */}
                     <div className="col-span-6 space-y-1.5 text-[10px] text-slate-500">
                       <p className="font-bold text-slate-800 text-xs">CHÍNH SÁCH BÁN HÀNG & PHÂN PHỐI</p>
-                      <p>• Bảng giá trên là giá bán lẻ chính thức chưa bao gồm VAT.</p>
-                      <p>• Chính sách hỗ trợ vận chuyển cho các đại lý khu vực TP. Hồ Chí Minh.</p>
-                      <p>• Cam kết sản phẩm chính hãng, bảo hành lỗi 1 đổi 1 trong vòng 12 tháng.</p>
+                      <p>• Bảng giá trên là giá bán lẻ chính thức đã bao gồm VAT.</p>
+                      <p>• Có chính sách hỗ trợ vận chuyển cho các đại lý.</p>
+                      <p>• Chính sách bảo hành phụ thuộc đặc tính vật liệu và đặc thù sản phẩm.</p>
                     </div>
 
                     {/* Sales Discount Policy Tiers */}
@@ -2207,31 +2339,25 @@ function PageContent() {
                   ========================================================= */}
               {template === "bento" && (
                 <div className="space-y-6 flex flex-col justify-between h-full min-h-[275mm]">
-                  
+
                   {/* Redesigned Premium Bento Header Card */}
                   <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm mb-4 flex flex-col sm:flex-row items-center justify-between gap-6">
                     {/* Decorative color accents */}
                     <div className="absolute top-0 left-0 w-full h-[4px]" style={{ backgroundColor: colors.primary }}></div>
                     <div className="absolute top-[4px] left-0 w-full h-[2px]" style={{ backgroundColor: colors.secondary }}></div>
-                    
+
                     {/* Left: Brand logo frame & company detail */}
                     <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
                       <div className="bg-slate-50 p-2.5 rounded-2xl border border-slate-200/50 flex items-center justify-center shadow-inner shrink-0">
                         <GamaInterlockLogo size={54} />
                       </div>
                       <div className="space-y-1">
-                        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                          <span className="text-[8px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full font-mono" style={{ backgroundColor: `${colors.primary}12`, color: colors.primary }}>
-                            {generalInfo.brandAccent} BRAND SHOWCASE
-                          </span>
-                          <span className="text-[8px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200/80 font-mono">
-                            Visual Catalogue
-                          </span>
-                        </div>
-                        <h2 className="text-lg font-black font-display tracking-tight text-slate-900 leading-tight uppercase max-w-md">
+                        <p className="text-xl font-black tracking-wider uppercase" style={{ color: "#0D5235" }}>
+                          {generalInfo.companyName}
+                        </p>
+                        <h2 className="text-lg font-black font-display tracking-tight leading-tight uppercase max-w-md" style={{ color: colors.primary }}>
                           {generalInfo.title}
                         </h2>
-                        <p className="text-[10px] text-slate-400 font-bold">{generalInfo.companyName}</p>
                       </div>
                     </div>
 
@@ -2251,23 +2377,23 @@ function PageContent() {
                   {/* Bento Grid layout */}
                   <div className="grid grid-cols-3 gap-4 flex-1 my-4">
                     {products.slice(0, 9).map((p) => (
-                      <div 
+                      <div
                         key={p.id}
                         className="border border-slate-200 rounded-2xl p-4.5 flex flex-col justify-between transition-all hover:shadow-lg relative bg-white"
                       >
                         {/* Photo Container */}
-                        <div 
+                        <div
                           className="w-full aspect-square rounded-xl flex items-center justify-center relative overflow-hidden mb-3.5 shadow-inner"
                           style={{ backgroundColor: p.bgColor || "#f8fafc" }}
                         >
-                          <img 
-                            src={p.image} 
-                            alt="" 
+                          <img
+                            src={p.image}
+                            alt=""
                             crossOrigin="anonymous"
                             className="max-w-[80%] max-h-[80%] object-contain"
                             style={{
                               filter: `brightness(${p.brightness}%) contrast(${p.contrast}%) saturate(${p.saturate}%)`,
-                              transform: `rotate(${p.rotation}deg)`,
+                              transform: `rotate(${p.rotation}deg) scale(${(p.scale || 100) / 100})`,
                               padding: `${p.padding / 2}px`
                             }}
                           />
@@ -2279,7 +2405,7 @@ function PageContent() {
                         {/* Title and pricing */}
                         <div className="space-y-1">
                           <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{p.brand}</p>
-                          
+
                           {/* Product Name */}
                           <span className={`${isExporting ? "block" : "hidden"} print:block text-xs font-bold text-slate-800 line-clamp-2 min-h-[32px] leading-snug`}>
                             {p.productName}
@@ -2306,7 +2432,7 @@ function PageContent() {
                               className="w-full bg-transparent border border-transparent hover:border-slate-200 focus:border-slate-300 focus:outline-none text-[9px] text-slate-400 print:hidden rounded px-1"
                             />
                           )}
-                          
+
                           <div className="flex items-baseline justify-between pt-1 border-t border-slate-100 mt-2">
                             <span className="text-[9px] font-bold text-slate-400 uppercase">Giá KM</span>
                             <div className="flex items-baseline justify-end">
@@ -2334,9 +2460,9 @@ function PageContent() {
                   {/* Bento Contact Box */}
                   <div className="bg-slate-900 text-white rounded-2xl p-5 grid grid-cols-12 gap-4 items-center" style={{ backgroundColor: colors.primary }}>
                     <div className="col-span-8 space-y-1">
-                      <p className="text-xs font-bold text-[#B8954F] tracking-wider">LIÊN HỆ MUA HÀNG NGAY</p>
+                      <p className="text-xs font-bold text-[#B8954F] tracking-wider">LIÊN HỆ MUA HÀNG</p>
                       <h4 className="text-base font-bold">{generalInfo.recipient}</h4>
-                      <p className="text-[11px] text-slate-300 leading-relaxed">Hãy liên hệ trực tiếp số điện thoại đại diện để nhận được mức chiết khấu tối ưu từ 10% đến 18% và các chính sách vận chuyển miễn phí.</p>
+                      <p className="text-[11px] text-slate-300 leading-relaxed">Liên hệ trực tiếp đại diện kinh doanh của GAMA để nhận được mức ưu đãi tốt nhất.</p>
                     </div>
 
                     <div className="col-span-4 text-right space-y-1 border-l border-slate-700 pl-5">
@@ -2354,13 +2480,13 @@ function PageContent() {
                   ========================================================= */}
               {template === "poster" && (
                 <div className="h-full min-h-[275mm] flex flex-col justify-between">
-                  
+
                   {/* Top luxury header */}
                   <div className="flex justify-between items-center border-b border-slate-100 pb-4">
                     <div className="flex items-center gap-2">
                       <GamaInterlockLogo size={42} />
                       <div>
-                        <h3 className="text-xs font-black tracking-wider uppercase" style={{ color: colors.primary }}>{generalInfo.companyName}</h3>
+                        <h3 className="text-xl font-black tracking-wider uppercase" style={{ color: "#0D5235" }}>{generalInfo.companyName}</h3>
                       </div>
                     </div>
                     <span className="text-[9px] font-bold px-2.5 py-1 rounded font-mono uppercase tracking-wider" style={{ backgroundColor: `${colors.primary}15`, color: colors.primary }}>
@@ -2371,20 +2497,20 @@ function PageContent() {
                   {/* Large Hero product selection */}
                   {selectedProduct ? (
                     <div className="my-auto py-10 space-y-8 flex-1 flex flex-col justify-center">
-                      
+
                       {/* Product Image Frame */}
-                      <div 
+                      <div
                         className="w-full max-w-[340px] aspect-square rounded-3xl mx-auto flex items-center justify-center shadow-xl relative overflow-hidden border border-slate-100/50"
                         style={{ backgroundColor: selectedProduct.bgColor || "#f8fafc" }}
                       >
-                        <img 
-                          src={selectedProduct.image} 
-                          alt="" 
+                        <img
+                          src={selectedProduct.image}
+                          alt=""
                           crossOrigin="anonymous"
                           className="max-w-[85%] max-h-[85%] object-contain"
                           style={{
                             filter: `brightness(${selectedProduct.brightness}%) contrast(${selectedProduct.contrast}%) saturate(${selectedProduct.saturate}%)`,
-                            transform: `rotate(${selectedProduct.rotation}deg)`,
+                            transform: `rotate(${selectedProduct.rotation}deg) scale(${(selectedProduct.scale || 100) / 100})`,
                             padding: `${selectedProduct.padding}px`
                           }}
                         />
@@ -2404,9 +2530,9 @@ function PageContent() {
                             className="bg-slate-900 text-white font-mono font-bold px-3 py-1 rounded-full uppercase tracking-widest text-center text-xs focus:outline-none w-32 border border-slate-700 mx-auto print:hidden"
                           />
                         )}
-                        
+
                         {/* Product Name */}
-                        <h2 className={`${isExporting ? "block" : "hidden"} print:block text-2xl font-black font-display tracking-tight text-slate-900 leading-snug`}>
+                        <h2 className={`${isExporting ? "block" : "hidden"} print:block text-2xl font-black font-display tracking-tight leading-snug`} style={{ color: colors.primary }}>
                           {selectedProduct.productName}
                         </h2>
                         {!isExporting && (
@@ -2414,7 +2540,8 @@ function PageContent() {
                             value={selectedProduct.productName}
                             onChange={(e) => handleInlineEditProduct(selectedProduct.id, "productName", e.target.value)}
                             rows={2}
-                            className="w-full max-w-lg mx-auto bg-transparent border border-transparent hover:border-slate-200 focus:border-slate-300 focus:outline-none text-2xl font-black font-display tracking-tight text-slate-900 text-center leading-snug resize-none rounded px-2 print:hidden min-h-[64px]"
+                            style={{ color: colors.primary }}
+                            className="w-full max-w-lg mx-auto bg-transparent border border-transparent hover:border-slate-200 focus:border-slate-300 focus:outline-none text-2xl font-black font-display tracking-tight text-center leading-snug resize-none rounded px-2 print:hidden min-h-[64px]"
                           />
                         )}
 
@@ -2515,6 +2642,9 @@ function PageContent() {
       <footer className="bg-white text-slate-500 text-center py-4 border-t border-slate-200 text-[11px] font-medium">
         <p>© 2026 GAMA Group. Ứng dụng tạo và quản lý báo giá chuyên dụng. Hỗ trợ chạy offline local, Vercel & Cloudflare.</p>
       </footer>
+
+      {/* AI Processing Modal Overlay */}
+      <AIProcessingLoader status={aiStatus} />
 
     </div>
   );

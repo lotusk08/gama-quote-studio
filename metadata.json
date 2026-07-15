@@ -1,6 +1,8 @@
 {
   "name": "GAMA Quote Studio",
-  "description": "Ứng dụng thiết kế và xuất bản bảng báo giá sản phẩm chuyên nghiệp, tinh tế cho các thương hiệu GAMA, Lendo và Ares.",
+  "description": "Ứng dụng thiết kế và xuất bản bảng báo giá sản phẩm chuyên nghiệp, tinh tế cho đại lý",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
