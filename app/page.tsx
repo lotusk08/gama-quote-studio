@@ -399,19 +399,19 @@ const sampleProducts: Product[] = [
   },
   {
     id: "2",
-    productCode: "LDVX11LV",
-    productName: "Bộ tay xịt ti đồng, dây nhựa lưới 3 lớp (V)",
-    brand: "Lendo",
-    price: 64000,
+    productCode: "GM-V201",
+    productName: "Vòi xịt cao cấp GAMA Pro Green",
+    brand: "GAMA",
+    price: 150000,
     unit: "Bộ",
-    image: FIXTURE_SVGS.spray_blue,
+    image: FIXTURE_SVGS.faucet_green,
     brightness: 100,
     contrast: 100,
     saturate: 100,
     rotation: 0,
-    bgColor: "#f0f9ff",
+    bgColor: "#f0fdf4",
     padding: 10,
-    description: "Mẫu vỏ đặc biệt cao cấp tăng áp lực nước."
+    description: "Thiết kế đồng bộ nhận diện GAMA, phủ bóng nano chống bám bẩn."
   },
   {
     id: "3",
@@ -431,168 +431,35 @@ const sampleProducts: Product[] = [
   },
   {
     id: "4",
-    productCode: "LDVX11TV",
-    productName: "Bộ tay xịt ti đồng, dây nhựa trắng 3 lớp (V)",
-    brand: "Lendo",
-    price: 61000,
+    productCode: "AR-X900",
+    productName: "Vòi sen tắm Ares Luxury Pink",
+    brand: "Ares",
+    price: 240000,
     unit: "Bộ",
-    image: FIXTURE_SVGS.spray_blue,
+    image: FIXTURE_SVGS.faucet_gold,
     brightness: 100,
     contrast: 100,
     saturate: 100,
     rotation: 0,
-    bgColor: "#ffffff",
+    bgColor: "#fdf2f8",
     padding: 10,
+    description: "Màu hồng thời thượng đẳng cấp, áp lực nước siêu mạnh."
   },
   {
     id: "5",
-    productCode: "LDVX21LZ",
-    productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa lưới 3 lớp",
-    brand: "Lendo",
-    price: 62000,
+    productCode: "GM-V102",
+    productName: "Bộ dây vòi GAMA Eco Brass",
+    brand: "GAMA",
+    price: 95000,
     unit: "Bộ",
-    image: FIXTURE_SVGS.spray_blue,
-    brightness: 100,
-    contrast: 100,
-    saturate: 100,
-    rotation: 0,
-    bgColor: "#f0f9ff",
-    padding: 10,
-  },
-  {
-    id: "6",
-    productCode: "LDVX21LV",
-    productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa lưới 3 lớp (V)",
-    brand: "Lendo",
-    price: 71000,
-    unit: "Bộ",
-    image: FIXTURE_SVGS.spray_blue,
-    brightness: 100,
-    contrast: 100,
-    saturate: 100,
-    rotation: 0,
-    bgColor: "#f0f9ff",
-    padding: 10,
-  },
-  {
-    id: "7",
-    productCode: "LDVX21TZ",
-    productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa trắng 3 lớp",
-    brand: "Lendo",
-    price: 59000,
-    unit: "Bộ",
-    image: FIXTURE_SVGS.spray_blue,
+    image: FIXTURE_SVGS.faucet_green,
     brightness: 100,
     contrast: 100,
     saturate: 100,
     rotation: 0,
     bgColor: "#ffffff",
     padding: 10,
-  },
-  {
-    id: "8",
-    productCode: "LDVX21TV",
-    productName: "Bộ tay xịt âm trắng mỏ xi ti đồng, dây nhựa trắng 3 lớp (V)",
-    brand: "Lendo",
-    price: 68000,
-    unit: "Bộ",
-    image: FIXTURE_SVGS.spray_blue,
-    brightness: 100,
-    contrast: 100,
-    saturate: 100,
-    rotation: 0,
-    bgColor: "#ffffff",
-    padding: 10,
-  },
-  {
-    id: "9",
-    productCode: "LDVX23TV",
-    productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa trắng 3 lớp",
-    brand: "Lendo",
-    price: 78000,
-    unit: "Bộ",
-    image: FIXTURE_SVGS.spray_gray,
-    brightness: 100,
-    contrast: 100,
-    saturate: 100,
-    rotation: 0,
-    bgColor: "#f1f5f9",
-    padding: 10,
-  },
-  {
-    id: "10",
-    productCode: "LDVX23TZ",
-    productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa trắng 3 lớp (Z)",
-    brand: "Lendo",
-    price: 69000,
-    unit: "Bộ",
-    image: FIXTURE_SVGS.spray_gray,
-    brightness: 100,
-    contrast: 100,
-    saturate: 100,
-    rotation: 0,
-    bgColor: "#f1f5f9",
-    padding: 10,
-  },
-  {
-    id: "11",
-    productCode: "LDVX23LV",
-    productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa lưới 3 lớp",
-    brand: "Lendo",
-    price: 81000,
-    unit: "Bộ",
-    image: FIXTURE_SVGS.spray_gray,
-    brightness: 100,
-    contrast: 100,
-    saturate: 100,
-    rotation: 0,
-    bgColor: "#f1f5f9",
-    padding: 10,
-  },
-  {
-    id: "12",
-    productCode: "LDVX23LZ",
-    productName: "Bộ tay xịt âm mỏ ghi ti đồng, dây nhựa lưới 3 lớp (Z)",
-    brand: "Lendo",
-    price: 72000,
-    unit: "Bộ",
-    image: FIXTURE_SVGS.spray_gray,
-    brightness: 100,
-    contrast: 100,
-    saturate: 100,
-    rotation: 0,
-    bgColor: "#f1f5f9",
-    padding: 10,
-  },
-  {
-    id: "13",
-    productCode: "LDVX22IZ",
-    productName: "Bộ tay xịt xi âm ti đồng, dây inox nhuyễn",
-    brand: "Lendo",
-    price: 90000,
-    unit: "Bộ",
-    image: FIXTURE_SVGS.faucet_gold,
-    brightness: 100,
-    contrast: 100,
-    saturate: 100,
-    rotation: 0,
-    bgColor: "#fffbeb",
-    padding: 10,
-  },
-  {
-    id: "14",
-    productCode: "LDVX22IV",
-    productName: "Bộ tay xịt xi âm ti đồng, dây inox nhuyễn (V)",
-    brand: "Lendo",
-    price: 99000,
-    unit: "Bộ",
-    image: FIXTURE_SVGS.faucet_gold,
-    brightness: 100,
-    contrast: 100,
-    saturate: 100,
-    rotation: 0,
-    bgColor: "#fffbeb",
-    padding: 10,
+    description: "Lõi đồng thau bền bỉ, tiết kiệm nước tối ưu."
   }
 ];
 
@@ -710,7 +577,7 @@ function PageContent() {
           const parsed = JSON.parse(savedGeneral);
           // Auto-migrate old default fields to the requested clean and simple GAMA info
           if (
-            parsed.companyName === "CÔNG TY TNHH TẬP ĐOÀN GAMA" ||
+            parsed.companyName === "GAMA GROUP CO., LTD" ||
             parsed.address === "ADRESS" ||
             parsed.hotline === "HOTLINE" ||
             parsed.companySlogan !== ""
@@ -914,7 +781,8 @@ function PageContent() {
           text: "text-[#0D5235]",
           accentBg: "bg-[#0D5235]/10",
           bannerBg: "from-[#0D5235] to-[#0D5235]/95",
-          priceText: "text-red-600"
+          priceText: "text-red-600",
+          onPrimaryText: "#A88C52" // Gold text on Green background
         };
       case "Lendo":
         return {
@@ -925,7 +793,8 @@ function PageContent() {
           text: "text-sky-900",
           accentBg: "bg-sky-500/10",
           bannerBg: "from-sky-800 to-sky-950",
-          priceText: "text-red-600"
+          priceText: "text-red-600",
+          onPrimaryText: "#FFF" // Clean white text on Sky Blue background
         };
       case "Ares":
         return {
@@ -936,7 +805,8 @@ function PageContent() {
           text: "text-pink-950",
           accentBg: "bg-pink-500/10",
           bannerBg: "from-pink-800 to-pink-950",
-          priceText: "text-pink-600"
+          priceText: "text-pink-600",
+          onPrimaryText: "#FFE4E6" // Soft rose text on Pink background (high readability)
         };
     }
   };
@@ -1395,7 +1265,7 @@ function PageContent() {
               <div className="space-y-6 animate-fadeIn">
                 <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                   <Palette className="w-5 h-5 text-[#0D5235]" />
-                  <h2 className="text-base font-bold text-slate-900">Cấu hình thông tin & Nhận diện</h2>
+                  <h2 className="text-base font-bold text-slate-900">Cấu hình thông tin</h2>
                 </div>
 
                 {/* Brand Theme Choice */}
@@ -1403,27 +1273,33 @@ function PageContent() {
                   <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Màu chủ đạo (Tông màu & Thiết kế)</label>
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { key: "GAMA", title: "Tập Đoàn GAMA", desc: "Xanh lá - Vàng kim", color: "bg-[#0D5235]" },
-                      { key: "Lendo", title: "Lendo Brand", desc: "Xanh dương - Cam", color: "bg-sky-600" },
-                      { key: "Ares", title: "Ares Brand", desc: "Tông hồng thời thượng", color: "bg-pink-500" }
-                    ].map(b => (
-                      <button
-                        key={b.key}
-                        onClick={() => setGeneralInfo({ ...generalInfo, brandAccent: b.key as any })}
-                        className={`p-3 rounded-xl border text-left transition-all relative overflow-hidden ${generalInfo.brandAccent === b.key ? "border-slate-900 bg-slate-900 text-white shadow-lg ring-2 ring-slate-900/10" : "border-slate-200 bg-slate-50 hover:bg-slate-100/60"}`}
-                      >
-                        <div className="flex items-center gap-1.5 mb-1">
-                          <span className={`w-3 h-3 rounded-full ${b.color}`}></span>
-                          <span className={`font-bold text-xs ${generalInfo.brandAccent === b.key ? "text-white" : "text-slate-800"}`}>{b.key}</span>
-                        </div>
-                        <p className={`text-[10px] ${generalInfo.brandAccent === b.key ? "text-slate-300" : "text-slate-500"}`}>{b.desc}</p>
-                        {generalInfo.brandAccent === b.key && (
-                          <div className="absolute top-1 right-1 bg-white text-slate-900 p-0.5 rounded-full">
-                            <Check className="w-3 h-3 stroke-[3]" />
+                      { key: "GAMA", title: "Tập Đoàn GAMA", desc: "Xanh lá - Vàng kim", bgSelected: "bg-[#0D5235] border-[#0D5235] text-white shadow-md ring-2 ring-[#0D5235]/25", circle: "bg-[#0D5235]" },
+                      { key: "Lendo", title: "Lendo Brand", desc: "Xanh dương - Cam", bgSelected: "bg-[#0284C7] border-[#0284C7] text-white shadow-md ring-2 ring-sky-500/25", circle: "bg-[#0284C7]" },
+                      { key: "Ares", title: "Ares Brand", desc: "Tông hồng thời thượng", bgSelected: "bg-[#DB2777] border-[#DB2777] text-white shadow-md ring-2 ring-pink-500/25", circle: "bg-[#DB2777]" }
+                    ].map(b => {
+                      const isSelected = generalInfo.brandAccent === b.key;
+                      return (
+                        <button
+                          key={b.key}
+                          onClick={() => setGeneralInfo({ ...generalInfo, brandAccent: b.key as any })}
+                          className={`p-3 rounded-2xl border text-left transition-all relative overflow-hidden flex flex-col justify-between min-h-[76px] hover:scale-[1.02] hover:shadow-sm
+                            ${isSelected ? b.bgSelected : "border-slate-200 bg-slate-50 hover:bg-slate-100/60 text-slate-800"}`}
+                        >
+                          <div className="flex items-center justify-between w-full mb-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className={`w-2.5 h-2.5 rounded-full ${isSelected ? "bg-white" : b.circle}`}></span>
+                              <span className="font-extrabold text-xs tracking-wide">{b.key}</span>
+                            </div>
+                            {isSelected && (
+                              <div className="bg-white/20 p-0.5 rounded-full shrink-0">
+                                <Check className="w-3 h-3 stroke-[3.5] text-white" />
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </button>
-                    ))}
+                          <p className={`text-[10px] font-medium leading-tight ${isSelected ? "text-white/80" : "text-slate-500"}`}>{b.desc}</p>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -1557,7 +1433,7 @@ function PageContent() {
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div className="flex items-center gap-2">
                     <Layers className="w-5 h-5 text-[#0D5235]" />
-                    <h2 className="text-base font-bold text-slate-900">Quản lý danh sách sản phẩm ({products.length})</h2>
+                    <h2 className="text-base font-bold text-slate-900">Danh sách sản phẩm ({products.length})</h2>
                   </div>
 
                   <button
@@ -1602,16 +1478,16 @@ function PageContent() {
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                  <div className="space-y-3">
                     {products.map((p, idx) => (
                       <div
                         key={p.id}
-                        className={`rounded-xl border transition-all overflow-hidden ${selectedProductId === p.id ? "border-[#0D5235] bg-white shadow-md ring-1 ring-[#0D5235]/10" : "border-slate-200 bg-slate-50/50 hover:bg-slate-50"}`}
+                        className={`rounded-2xl border transition-all overflow-hidden ${selectedProductId === p.id ? "border-[#0D5235] bg-white shadow-lg ring-1 ring-[#0D5235]/15" : "border-slate-200 bg-slate-50/50 hover:bg-slate-50"}`}
                       >
                         {/* HEADER: Click to toggle expansion */}
                         <div
                           onClick={() => setSelectedProductId(selectedProductId === p.id ? "" : p.id)}
-                          className="p-3.5 flex items-center gap-3.5 cursor-pointer relative select-none"
+                          className={`p-3.5 flex items-center gap-3.5 cursor-pointer relative select-none transition-all ${selectedProductId === p.id ? "bg-[#0D5235]/5" : ""}`}
                         >
                           {/* Compact thumbnail preview with color backing */}
                           <div
@@ -1674,7 +1550,7 @@ function PageContent() {
 
                         {/* ACCORDION EXPANDED FORM */}
                         {selectedProductId === p.id && (
-                          <div className="border-t border-slate-100 p-4 bg-slate-50/50 space-y-3.5 animate-fadeIn">
+                          <div className="border-t border-slate-100 p-4 space-y-3.5 animate-fadeIn bg-white">
                             <div className="grid grid-cols-2 gap-3">
                               <div>
                                 <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mã sản phẩm</label>
@@ -2080,7 +1956,7 @@ function PageContent() {
                     subtitle: "(Áp dụng từ ngày 14/07/2026)",
                     recipient: "Quý Khách Hàng / Quý Đại Lý",
                     date: "14/07/2026",
-                    companyName: "CÔNG TY TNHH TẬP ĐOÀN GAMA",
+                    companyName: "GAMA GROUP CO., LTD",
                     companySlogan: "CUNG CẤP THIẾT BỊ VỆ SINH, SƠN NƯỚC VÀ GẠCH MEN",
                     address: "VPKD: 54/6E Ấp Tiền Lân, Xã Bà Điểm, Huyện Hóc Môn, TP.HCM",
                     hotline: "Hotline: 0902 949 946 - 0934 077 239",
@@ -2345,10 +2221,13 @@ function PageContent() {
 
                               {/* Brand Label Accent */}
                               <td className="py-3 px-2 text-center">
-                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-block
-                                  ${p.brand === "GAMA" ? "bg-[#0D5235]/15 text-[#0D5235]" : ""}
-                                  ${p.brand === "Lendo" ? "bg-sky-100 text-sky-800" : ""}
-                                  ${p.brand === "Ares" ? "bg-pink-100 text-pink-800" : ""}`}>
+                                <span
+                                  className="text-[10px] font-bold px-2.5 py-0.5 rounded-full inline-block uppercase tracking-wider"
+                                  style={{
+                                    backgroundColor: hexToRgba(p.brand === "GAMA" ? "#0D5235" : p.brand === "Lendo" ? "#0284C7" : "#DB2777", 0.12),
+                                    color: p.brand === "GAMA" ? "#0D5235" : p.brand === "Lendo" ? "#0284C7" : "#DB2777"
+                                  }}
+                                >
                                   {p.brand}
                                 </span>
                               </td>
@@ -2499,7 +2378,14 @@ function PageContent() {
 
                         {/* Title and pricing */}
                         <div className="space-y-1">
-                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{p.brand}</p>
+                          <p
+                            className="text-[10px] font-extrabold uppercase tracking-wider"
+                            style={{
+                              color: p.brand === "GAMA" ? "#0D5235" : p.brand === "Lendo" ? "#0284C7" : "#DB2777"
+                            }}
+                          >
+                            {p.brand}
+                          </p>
 
                           {/* Product Name */}
                           <span className={`${isExporting ? "block" : "hidden"} print:block text-xs font-bold text-slate-800 line-clamp-2 min-h-[32px] leading-snug`}>
@@ -2555,7 +2441,7 @@ function PageContent() {
                   {/* Bento Contact Box */}
                   <div className="bg-slate-900 text-white rounded-2xl p-5 grid grid-cols-12 gap-4 items-center" style={{ backgroundColor: colors.primary }}>
                     <div className="col-span-8 space-y-1">
-                      <p className="text-xs font-bold text-[#B8954F] tracking-wider">LIÊN HỆ MUA HÀNG</p>
+                      <p className="text-xs font-bold tracking-wider" style={{ color: colors.onPrimaryText }}>LIÊN HỆ MUA HÀNG</p>
                       <h4 className="text-base font-bold">{generalInfo.recipient}</h4>
                       <p className="text-[11px] text-slate-300 leading-relaxed">Liên hệ trực tiếp đại diện kinh doanh của GAMA để nhận được mức ưu đãi tốt nhất.</p>
                     </div>
@@ -2563,7 +2449,7 @@ function PageContent() {
                     <div className="col-span-4 text-right space-y-1 border-l border-slate-700 pl-5">
                       <p className="text-xs text-slate-400">Đại diện kinh doanh</p>
                       <p className="text-sm font-bold text-white">{generalInfo.saleRepName}</p>
-                      <p className="text-sm font-bold font-mono text-[#B8954F]">{generalInfo.saleRepPhone}</p>
+                      <p className="text-sm font-bold font-mono" style={{ color: colors.onPrimaryText }}>{generalInfo.saleRepPhone}</p>
                     </div>
                   </div>
 
@@ -2613,18 +2499,29 @@ function PageContent() {
 
                       {/* Info layout */}
                       <div className="text-center space-y-4 max-w-xl mx-auto flex flex-col items-center">
-                        {/* Product Code */}
-                        <span className={`${isExporting ? "inline-block" : "hidden"} print:inline-block text-xs bg-slate-900 text-white font-mono font-bold px-3 py-1 rounded-full uppercase tracking-widest`}>
-                          {selectedProduct.productCode}
-                        </span>
-                        {!isExporting && (
-                          <input
-                            type="text"
-                            value={selectedProduct.productCode}
-                            onChange={(e) => handleInlineEditProduct(selectedProduct.id, "productCode", e.target.value)}
-                            className="bg-slate-900 text-white font-mono font-bold px-3 py-1 rounded-full uppercase tracking-widest text-center text-xs focus:outline-none w-32 border border-slate-700 mx-auto print:hidden"
-                          />
-                        )}
+                        {/* Product Code & Brand Badge */}
+                        <div className="flex items-center justify-center gap-2">
+                          <span className={`${isExporting ? "inline-block" : "hidden"} print:inline-block text-xs bg-slate-900 text-white font-mono font-bold px-3 py-1 rounded-full uppercase tracking-widest`}>
+                            {selectedProduct.productCode}
+                          </span>
+                          {!isExporting && (
+                            <input
+                              type="text"
+                              value={selectedProduct.productCode}
+                              onChange={(e) => handleInlineEditProduct(selectedProduct.id, "productCode", e.target.value)}
+                              className="bg-slate-900 text-white font-mono font-bold px-3 py-1 rounded-full uppercase tracking-widest text-center text-xs focus:outline-none w-32 border border-slate-700 mx-auto print:hidden"
+                            />
+                          )}
+                          <span
+                            className="text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider"
+                            style={{
+                              backgroundColor: hexToRgba(selectedProduct.brand === "GAMA" ? "#0D5235" : selectedProduct.brand === "Lendo" ? "#0284C7" : "#DB2777", 0.12),
+                              color: selectedProduct.brand === "GAMA" ? "#0D5235" : selectedProduct.brand === "Lendo" ? "#0284C7" : "#DB2777"
+                            }}
+                          >
+                            {selectedProduct.brand}
+                          </span>
+                        </div>
 
                         {/* Product Name */}
                         <h2 className={`${isExporting ? "block" : "hidden"} print:block text-2xl font-black font-display tracking-tight leading-snug`} style={{ color: colors.primary }}>
@@ -2735,7 +2632,7 @@ function PageContent() {
 
       {/* FOOTER BAR */}
       <footer className="bg-white text-slate-500 text-center py-4 border-t border-slate-200 text-[11px] font-medium">
-        <p>© 2026 GAMA Group. Ứng dụng tạo và quản lý báo giá chuyên dụng. Hỗ trợ chạy offline local, Vercel & Cloudflare.</p>
+        <p>© 2026 GAMA Group. Ứng dụng tạo báo giá chuyên dụng. Chỉ chạy offline trên máy.</p>
       </footer>
 
       {/* AI Processing Modal Overlay */}
