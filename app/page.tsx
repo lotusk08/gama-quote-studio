@@ -866,40 +866,27 @@ function PageContent() {
       if (e.target?.result) {
         try {
           let rawBase64 = e.target.result as string;
-          setAiStatus("remove-bg");
 
           triggerNotification("Đang xử lý tối ưu hóa dung lượng ảnh...", "info");
           // Resize to maximum 800px to optimize storage footprint
           rawBase64 = await resizeBase64Image(rawBase64, 800);
 
-          // Remove background automatically upon upload
-          triggerNotification("Đang tự động tách nền bằng AI...", "info");
-          let processedBase64 = rawBase64;
-          try {
-            processedBase64 = await removeBgUsingGeminiAI(rawBase64);
-          } catch (err) {
-            console.warn("AI background removal failed, falling back to chroma keying...", err);
-            processedBase64 = await removeImageBackground(rawBase64, 35);
-          }
-
           setProducts(prev => prev.map(p => {
             if (p.id === id) {
               return {
                 ...p,
-                image: processedBase64,
+                image: rawBase64,
                 originalImage: rawBase64,
-                isBgRemoved: true,
+                isBgRemoved: false,
                 isCustomImage: true
               };
             }
             return p;
           }));
-          triggerNotification("Đã tải ảnh & tự động tách nền thành công!", "success");
+          triggerNotification("Đã tải ảnh lên thành công!", "success");
         } catch (err) {
           console.error("Image upload error:", err);
           triggerNotification("Lỗi khi tải hoặc xử lý ảnh sản phẩm.", "error");
-        } finally {
-          setAiStatus(null);
         }
       }
     };
