@@ -2581,7 +2581,7 @@ function PageContent() {
 
       {/* FOOTER BAR */}
       <footer className="bg-white text-slate-500 text-center py-4 border-t border-slate-200 text-[11px] font-medium">
-        <p>© 2026 GAMA Group. Ứng dụng tạo báo giá chuyên dụng. Chỉ chạy offline trên máy.</p>
+        <p>© 2026 GAMA. Ứng dụng tạo báo giá offline.</p>
       </footer>
 
       {/* AI Processing Modal Overlay */}
