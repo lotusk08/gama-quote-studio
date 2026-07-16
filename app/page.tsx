@@ -1320,10 +1320,10 @@ function PageContent() {
           <button
             onClick={handleLoadSampleData}
             className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-600 bg-slate-50 rounded-lg hover:bg-slate-100 transition-all border border-slate-200"
-            title="Nạp lại bảng sản phẩm mẫu"
+            title="Nạp lại sản phẩm mẫu"
           >
             <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
-            <span>Nạp bảng sản phẩm mẫu (5SP)</span>
+            <span>Nạp sản phẩm mẫu (5SP)</span>
           </button>
 
           <button
@@ -1575,7 +1575,7 @@ function PageContent() {
                     <div className="bg-[#0D5235]/10 p-4 rounded-full text-[#0D5235] animate-pulse">
                       <Layers className="w-8 h-8" />
                     </div>
-                    
+
                     <div className="space-y-1.5 max-w-xs">
                       <h3 className="text-sm font-extrabold text-slate-900">Danh sách trống</h3>
                       <p className="text-[11px] text-slate-500 leading-relaxed">
@@ -1591,7 +1591,7 @@ function PageContent() {
                         <Plus className="w-4 h-4 stroke-[3]" />
                         <span>Thêm sản phẩm đầu tiên</span>
                       </button>
-                      
+
                       <button
                         onClick={handleLoadSampleData}
                         className="w-full py-2.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all border border-slate-200"
@@ -1659,7 +1659,7 @@ function PageContent() {
                                 <ArrowDown className="w-2.5 h-2.5" />
                               </button>
                             </div>
-                            
+
                             <button
                               onClick={(e) => handleDeleteProduct(p.id, e)}
                               className="p-1.5 rounded bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white transition-all shadow-sm"
