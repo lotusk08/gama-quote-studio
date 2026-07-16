@@ -608,6 +608,14 @@ function PageContent() {
   const [notification, setNotification] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
   const [isAiLoading, setIsAiLoading] = useState<boolean>(false);
   const [aiStatus, setAiStatus] = useState<"analyze" | "remove-bg" | null>(null);
+  const [exportedImageUrl, setExportedImageUrl] = useState<string | null>(null);
+
+  // Responsive zoom detector for mobile
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setZoom(45);
+    }
+  }, []);
 
   // General Company/Quotation details
   const [generalInfo, setGeneralInfo] = useState<GeneralInfo>({
@@ -777,11 +785,12 @@ function PageContent() {
   // Helper Functions & Handlers
   // ==========================================
 
-  // Load standard template products
+  // Load initial sample data (Limited to 5 products for Demo)
   const handleLoadSampleData = () => {
-    setProducts(sampleProducts);
-    setSelectedProductId(sampleProducts[0].id);
-    triggerNotification("Đã tải dữ liệu mẫu thành công với 14 bộ vòi xịt Lendo!", "success");
+    const demoProducts = sampleProducts.slice(0, 5);
+    setProducts(demoProducts);
+    setSelectedProductId(demoProducts[0].id);
+    triggerNotification("Đã tải dữ liệu mẫu thành công với 5 sản phẩm GAMA!", "success");
   };
 
   // Clear products list
@@ -1132,12 +1141,15 @@ function PageContent() {
       });
 
       const dataUrl = canvas.toDataURL("image/png");
+      setExportedImageUrl(dataUrl);
+
+      // Attempt direct download for desktop browsers
       const link = document.createElement("a");
       link.download = `BAO_GIA_GAMA_${generalInfo.date.replace(/\//g, "-")}.png`;
       link.href = dataUrl;
       link.click();
 
-      triggerNotification("Đã tải xuống file báo giá dạng ảnh chất lượng cao!", "success");
+      triggerNotification("Đã tạo ảnh báo giá thành công!", "success");
     } catch (err) {
       console.error(err);
       triggerNotification("Có lỗi xảy ra khi xuất ảnh. Vui lòng thử lại.", "error");
@@ -1311,7 +1323,7 @@ function PageContent() {
             title="Nạp lại bảng sản phẩm mẫu"
           >
             <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
-            <span>Nạp bảng sản phẩm mẫu (14SP)</span>
+            <span>Nạp bảng sản phẩm mẫu (5SP)</span>
           </button>
 
           <button
@@ -1550,7 +1562,7 @@ function PageContent() {
 
                   <button
                     onClick={handleAddProduct}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 text-white font-bold rounded-lg text-xs hover:bg-slate-800 transition-all shadow"
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 bg-[#0D5235] text-white font-bold rounded-lg text-xs hover:bg-[#0D5235]/90 transition-all shadow-md ring-2 ring-[#0D5235]/25 hover:scale-105"
                   >
                     <Plus className="w-4 h-4 stroke-[3]" />
                     <span>Thêm SP</span>
@@ -1559,192 +1571,217 @@ function PageContent() {
 
                 {/* Compact Interactive Row-Based Product List */}
                 {products.length === 0 ? (
-                  <div className="text-center py-10 bg-slate-50 rounded-2xl border border-slate-200 border-dashed">
-                    <ImageIcon className="w-12 h-12 text-slate-400 mx-auto mb-3" />
-                    <p className="text-sm text-slate-500">Chưa có sản phẩm nào được nhập.</p>
-                    <button
-                      onClick={handleLoadSampleData}
-                      className="mt-3 text-xs font-bold text-sky-600 hover:underline"
-                    >
-                      Bấm vào đây để tải dữ liệu mẫu Lendo
-                    </button>
+                  <div className="text-center py-12 px-6 bg-slate-50/50 rounded-2xl border border-slate-200/80 border-dashed flex flex-col items-center justify-center space-y-5">
+                    <div className="bg-[#0D5235]/10 p-4 rounded-full text-[#0D5235] animate-pulse">
+                      <Layers className="w-8 h-8" />
+                    </div>
+                    
+                    <div className="space-y-1.5 max-w-xs">
+                      <h3 className="text-sm font-extrabold text-slate-900">Danh sách trống</h3>
+                      <p className="text-[11px] text-slate-500 leading-relaxed">
+                        Bắt đầu biên soạn báo giá bằng cách thêm sản phẩm mới hoặc nạp dữ liệu mẫu của GAMA để xem thiết kế.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-2 w-full max-w-[240px] pt-2">
+                      <button
+                        onClick={handleAddProduct}
+                        className="w-full py-2.5 bg-[#0D5235] hover:bg-[#0D5235]/90 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow transition-all hover:scale-[1.02]"
+                      >
+                        <Plus className="w-4 h-4 stroke-[3]" />
+                        <span>Thêm sản phẩm đầu tiên</span>
+                      </button>
+                      
+                      <button
+                        onClick={handleLoadSampleData}
+                        className="w-full py-2.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all border border-slate-200"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
+                        <span>Nạp dữ liệu mẫu (5SP)</span>
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
                     {products.map((p, idx) => (
                       <div
                         key={p.id}
-                        onClick={() => setSelectedProductId(p.id)}
-                        className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer relative flex items-center gap-3.5 group
-                          ${selectedProductId === p.id ? "border-[#0D5235] bg-[#0D5235]/10/30 shadow-sm ring-1 ring-[#0D5235]/20" : "border-slate-150 bg-slate-50/50 hover:bg-slate-50"}`}
+                        className={`rounded-xl border transition-all overflow-hidden ${selectedProductId === p.id ? "border-[#0D5235] bg-white shadow-md ring-1 ring-[#0D5235]/10" : "border-slate-200 bg-slate-50/50 hover:bg-slate-50"}`}
                       >
-                        {/* Compact thumbnail preview with color backing */}
+                        {/* HEADER: Click to toggle expansion */}
                         <div
-                          className="w-12 h-12 rounded-lg relative overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center shadow-inner"
-                          style={{ backgroundColor: p.bgColor }}
+                          onClick={() => setSelectedProductId(selectedProductId === p.id ? "" : p.id)}
+                          className="p-3.5 flex items-center gap-3.5 cursor-pointer relative select-none"
                         >
-                          <img
-                            src={p.image}
-                            alt={p.productCode}
-                            className="max-w-[85%] max-h-[85%] object-contain transition-all"
-                            style={{
-                              filter: `brightness(${p.brightness}%) contrast(${p.contrast}%) saturate(${p.saturate}%)`,
-                              transform: `rotate(${p.rotation}deg) scale(${(p.scale || 100) / 100})`
-                            }}
-                          />
-                        </div>
-
-                        {/* Core Details */}
-                        <div className="flex-1 min-w-0 space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="font-mono text-xs font-bold text-[#0D5235] truncate">{p.productCode}</span>
-                            <span className="text-[10px] bg-white border border-slate-200 text-slate-600 px-2 py-0.5 rounded font-bold">{p.brand}</span>
-                          </div>
-                          <p className="text-sm font-semibold text-slate-800 truncate">{p.productName}</p>
-                          <p className="text-xs text-rose-600 font-bold">{p.price.toLocaleString("vi-VN")} đ <span className="text-slate-500 font-normal">/ {p.unit}</span></p>
-                        </div>
-
-                        {/* Row management buttons */}
-                        <div className="flex flex-col items-center gap-1.5 opacity-60 group-hover:opacity-100 transition-all ml-1.5">
-                          <div className="flex gap-1">
-                            <button
-                              onClick={(e) => handleMoveUp(idx, e)}
-                              disabled={idx === 0}
-                              className="p-1 rounded bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 disabled:opacity-30"
-                              title="Di chuyển lên"
-                            >
-                              <ArrowUp className="w-3 h-3" />
-                            </button>
-                            <button
-                              onClick={(e) => handleMoveDown(idx, e)}
-                              disabled={idx === products.length - 1}
-                              className="p-1 rounded bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 disabled:opacity-30"
-                              title="Di chuyển xuống"
-                            >
-                              <ArrowDown className="w-3 h-3" />
-                            </button>
-                          </div>
-                          <button
-                            onClick={(e) => handleDeleteProduct(p.id, e)}
-                            className="p-1 rounded bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white transition-all"
-                            title="Xóa dòng này"
+                          {/* Compact thumbnail preview with color backing */}
+                          <div
+                            className="w-12 h-12 rounded-lg relative overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center shadow-inner"
+                            style={{ backgroundColor: p.bgColor }}
                           >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
+                            <img
+                              src={p.image}
+                              alt={p.productCode}
+                              className="max-w-[85%] max-h-[85%] object-contain transition-all"
+                              style={{
+                                filter: `brightness(${p.brightness}%) contrast(${p.contrast}%) saturate(${p.saturate}%)`,
+                                transform: `rotate(${p.rotation}deg) scale(${(p.scale || 100) / 100})`
+                              }}
+                            />
+                          </div>
+
+                          {/* Core Details */}
+                          <div className="flex-1 min-w-0 space-y-0.5">
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono text-xs font-bold text-[#0D5235] truncate">{p.productCode}</span>
+                              <span className="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-bold">{p.brand}</span>
+                            </div>
+                            <p className="text-xs font-semibold text-slate-800 truncate">{p.productName}</p>
+                            <p className="text-xs text-[#0D5235] font-bold">{p.price.toLocaleString("vi-VN")} đ <span className="text-slate-400 font-normal">/ {p.unit}</span></p>
+                          </div>
+
+                          {/* Controls (Stop propagation to prevent card collapsing) */}
+                          <div className="flex items-center gap-2 ml-1" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex flex-col gap-1">
+                              <button
+                                onClick={(e) => handleMoveUp(idx, e)}
+                                disabled={idx === 0}
+                                className="p-1 rounded bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 disabled:opacity-20 transition-all shadow-sm"
+                                title="Di chuyển lên"
+                              >
+                                <ArrowUp className="w-2.5 h-2.5" />
+                              </button>
+                              <button
+                                onClick={(e) => handleMoveDown(idx, e)}
+                                disabled={idx === products.length - 1}
+                                className="p-1 rounded bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 disabled:opacity-20 transition-all shadow-sm"
+                                title="Di chuyển xuống"
+                              >
+                                <ArrowDown className="w-2.5 h-2.5" />
+                              </button>
+                            </div>
+                            
+                            <button
+                              onClick={(e) => handleDeleteProduct(p.id, e)}
+                              className="p-1.5 rounded bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white transition-all shadow-sm"
+                              title="Xóa dòng này"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+
+                            <ChevronRight className={`w-4 h-4 text-slate-400 transition-all duration-200 shrink-0 ${selectedProductId === p.id ? "rotate-90 text-[#0D5235]" : ""}`} />
+                          </div>
                         </div>
+
+                        {/* ACCORDION EXPANDED FORM */}
+                        {selectedProductId === p.id && (
+                          <div className="border-t border-slate-100 p-4 bg-slate-50/50 space-y-3.5 animate-fadeIn">
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mã sản phẩm</label>
+                                <input
+                                  type="text"
+                                  value={p.productCode}
+                                  onChange={(e) => updateProductField(p.id, "productCode", e.target.value)}
+                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Thương hiệu</label>
+                                <select
+                                  value={p.brand}
+                                  onChange={(e) => updateProductField(p.id, "brand", e.target.value)}
+                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
+                                >
+                                  <option value="GAMA">GAMA</option>
+                                  <option value="Lendo">Lendo</option>
+                                  <option value="Ares">Ares</option>
+                                </select>
+                              </div>
+
+                              <div className="col-span-2">
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tên sản phẩm</label>
+                                <input
+                                  type="text"
+                                  value={p.productName}
+                                  onChange={(e) => updateProductField(p.id, "productName", e.target.value)}
+                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Giá bán lẻ (VNĐ)</label>
+                                <input
+                                  type="number"
+                                  value={p.price}
+                                  onChange={(e) => updateProductField(p.id, "price", parseInt(e.target.value) || 0)}
+                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Đơn vị tính (ĐVT)</label>
+                                <input
+                                  type="text"
+                                  value={p.unit}
+                                  onChange={(e) => updateProductField(p.id, "unit", e.target.value)}
+                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
+                                />
+                              </div>
+
+                              <div className="col-span-2">
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mô tả sản phẩm / Chi tiết kỹ thuật</label>
+                                <textarea
+                                  value={p.description || ""}
+                                  onChange={(e) => updateProductField(p.id, "description", e.target.value)}
+                                  rows={2}
+                                  placeholder="Mô tả chất liệu, đặc tính kỹ thuật..."
+                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235] resize-none"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Image Controls inside the product card */}
+                            <div className="flex gap-2 pt-2 border-t border-slate-100/60 mt-2">
+                              <div className="flex-1 relative">
+                                <input
+                                  type="file"
+                                  id={`img-uploader-${p.id}`}
+                                  accept="image/*"
+                                  onChange={(e) => {
+                                    if (e.target.files?.[0]) {
+                                      handleImageUpload(p.id, e.target.files[0]);
+                                    }
+                                  }}
+                                  className="hidden"
+                                />
+                                <label
+                                  htmlFor={`img-uploader-${p.id}`}
+                                  className="w-full py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-lg text-xs text-center block cursor-pointer border border-slate-200 flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                                >
+                                  <Upload className="w-3.5 h-3.5 text-slate-500" />
+                                  <span>Tải ảnh sản phẩm</span>
+                                </label>
+                              </div>
+
+                              <button
+                                onClick={() => handleAiProductAnalysis(p.id)}
+                                disabled={isAiLoading}
+                                className="px-4 py-2 bg-[#0D5235] hover:bg-[#0D5235]/90 disabled:opacity-40 text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                                title="Dùng AI phân tích hình ảnh và điền tự động"
+                              >
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span>AI Tự điền</span>
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
                 )}
 
-                {/* Edit Section of currently selected product */}
-                {selectedProduct && (
-                  <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200 space-y-3.5 animate-fadeIn">
-                    <div className="flex items-center gap-2 border-b border-slate-100 pb-2 mb-1">
-                      <Edit2 className="w-4 h-4 text-[#0D5235]" />
-                      <h3 className="text-xs font-bold uppercase text-slate-800">Chỉnh sửa chi tiết: <span className="font-mono text-[#0D5235]">{selectedProduct.productCode}</span></h3>
-                    </div>
 
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-[10px] text-slate-500 mb-1">Mã sản phẩm</label>
-                        <input
-                          type="text"
-                          value={selectedProduct.productCode}
-                          onChange={(e) => updateProductField(selectedProduct.id, "productCode", e.target.value)}
-                          className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-slate-900"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-[10px] text-slate-500 mb-1">Thương hiệu</label>
-                        <select
-                          value={selectedProduct.brand}
-                          onChange={(e) => updateProductField(selectedProduct.id, "brand", e.target.value)}
-                          className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-slate-900"
-                        >
-                          <option value="GAMA">GAMA</option>
-                          <option value="Lendo">Lendo</option>
-                          <option value="Ares">Ares</option>
-                        </select>
-                      </div>
-
-                      <div className="col-span-2">
-                        <label className="block text-[10px] text-slate-500 mb-1">Tên sản phẩm</label>
-                        <input
-                          type="text"
-                          value={selectedProduct.productName}
-                          onChange={(e) => updateProductField(selectedProduct.id, "productName", e.target.value)}
-                          className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-slate-900"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-[10px] text-slate-500 mb-1">Giá bán lẻ (VNĐ)</label>
-                        <input
-                          type="number"
-                          value={selectedProduct.price}
-                          onChange={(e) => updateProductField(selectedProduct.id, "price", parseInt(e.target.value) || 0)}
-                          className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-slate-900"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-[10px] text-slate-500 mb-1">Đơn vị tính (ĐVT)</label>
-                        <input
-                          type="text"
-                          value={selectedProduct.unit}
-                          onChange={(e) => updateProductField(selectedProduct.id, "unit", e.target.value)}
-                          className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-slate-900"
-                        />
-                      </div>
-
-                      <div className="col-span-2">
-                        <label className="block text-[10px] text-slate-500 mb-1">Mô tả sản phẩm / Chi tiết kỹ thuật</label>
-                        <textarea
-                          value={selectedProduct.description || ""}
-                          onChange={(e) => updateProductField(selectedProduct.id, "description", e.target.value)}
-                          rows={2}
-                          placeholder="Mô tả chất liệu, đặc tính kỹ thuật..."
-                          className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-slate-900 resize-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <div className="flex-1 relative">
-                        <input
-                          type="file"
-                          id="product-image-uploader"
-                          accept="image/*"
-                          onChange={(e) => {
-                            if (e.target.files?.[0]) {
-                              handleImageUpload(selectedProduct.id, e.target.files[0]);
-                            }
-                          }}
-                          className="hidden"
-                        />
-                        <label
-                          htmlFor="product-image-uploader"
-                          className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded text-xs text-center block cursor-pointer border border-slate-200 flex items-center justify-center gap-1.5"
-                        >
-                          <Upload className="w-3.5 h-3.5" />
-                          Tải ảnh thực tế lên
-                        </label>
-                      </div>
-
-                      <button
-                        onClick={() => handleAiProductAnalysis(selectedProduct.id)}
-                        disabled={isAiLoading}
-                        className="px-4 py-2 bg-[#0D5235] hover:bg-[#0D5235]/90 disabled:opacity-40 text-white font-bold rounded text-xs flex items-center justify-center gap-1.5 shadow"
-                        title="Dùng AI phân tích hình ảnh và điền tự động"
-                      >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>AI Tự điền</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
             )}
 
@@ -1753,7 +1790,7 @@ function PageContent() {
               <div className="space-y-5 animate-fadeIn">
                 <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                   <Sliders className="w-5 h-5 text-[#0D5235]" />
-                  <h2 className="text-base font-bold text-slate-900">Chỉnh sửa ảnh chuyên nghiệp</h2>
+                  <h2 className="text-base font-bold text-slate-900">Sửa ảnh sản phẩm</h2>
                 </div>
 
                 {!selectedProductId ? (
@@ -1765,7 +1802,7 @@ function PageContent() {
                     {/* Active product highlight header */}
                     <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
                       <div
-                        className="w-10 h-10 rounded bg-white flex items-center justify-center shrink-0 border border-slate-200"
+                        className="w-10 h-10 rounded bg-white flex items-center justify-center shrink-0 border border-slate-200 overflow-hidden"
                         style={{ backgroundColor: selectedProduct.bgColor }}
                       >
                         <img
@@ -2132,9 +2169,11 @@ function PageContent() {
             <div
               id="quotation-preview"
               ref={previewRef}
-              className="bg-white text-slate-800 p-8 shadow-2xl relative border border-slate-200 overflow-hidden print:shadow-none print:border-none"
+              className="bg-white text-slate-800 p-8 shadow-2xl relative border border-slate-200 overflow-hidden print:shadow-none print:border-none shrink-0"
               style={{
                 width: "210mm", // Standard A4 Width
+                minWidth: "210mm", // Lock A4 dimensions
+                maxWidth: "210mm",
                 minHeight: "297mm", // Standard A4 Height
                 fontFamily: "var(--font-sans), sans-serif",
                 color: "#1e293b"
@@ -2702,6 +2741,52 @@ function PageContent() {
       {/* AI Processing Modal Overlay */}
       <AIProcessingLoader status={aiStatus} />
 
+      {/* Safari/Mobile Image Save Helper Modal */}
+      {exportedImageUrl && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-md w-full text-center shadow-2xl border border-slate-100 flex flex-col items-center space-y-4 animate-fadeIn">
+            <div className="bg-emerald-50 p-3 rounded-full text-emerald-600 flex items-center justify-center">
+              <Check className="w-6 h-6" />
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="text-base font-extrabold text-slate-900">Báo giá của bạn đã sẵn sàng!</h3>
+              <p className="text-[11px] text-slate-500 max-w-xs mx-auto leading-relaxed">
+                Trên Safari và điện thoại di động: Hãy <strong>chạm và giữ (hoặc đè tay) vào hình ảnh dưới đây</strong>, sau đó chọn <strong>"Thêm vào Ảnh" (Save to Photos)</strong> hoặc <strong>"Lưu hình ảnh"</strong> để tải về thư viện điện thoại.
+              </p>
+            </div>
+
+            <div className="w-full bg-slate-100 rounded-xl border border-slate-200 overflow-y-auto p-1.5 shadow-inner" style={{ maxHeight: "40vh" }}>
+              <img
+                src={exportedImageUrl}
+                alt="Generated Quote"
+                className="w-full h-auto rounded-lg shadow-sm"
+              />
+            </div>
+
+            <div className="flex gap-2 w-full pt-1">
+              <button
+                onClick={() => {
+                  const link = document.createElement("a");
+                  link.download = `BAO_GIA_GAMA_${generalInfo.date.replace(/\//g, "-")}.png`;
+                  link.href = exportedImageUrl;
+                  link.click();
+                }}
+                className="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs transition-all border border-slate-200"
+              >
+                Thử Tải Về Trực Tiếp
+              </button>
+
+              <button
+                onClick={() => setExportedImageUrl(null)}
+                className="flex-1 py-2 bg-[#0D5235] hover:bg-[#0D5235]/90 text-white font-bold rounded-lg text-xs transition-all shadow-md"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
