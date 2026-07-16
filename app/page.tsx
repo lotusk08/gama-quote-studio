@@ -1179,7 +1179,7 @@ function PageContent() {
           </div>
           <div>
             <h1 className="text-lg font-bold font-display tracking-tight text-slate-900 flex items-center gap-2">
-              GAMA Quote Studio <span className="text-xs bg-[#0D5235]/10 text-[#0D5235] px-2.5 py-0.5 rounded-full border border-[#0D5235]/20">v2.1</span>
+              GAMA Quote Studio <span className="text-xs bg-[#0D5235]/10 text-[#0D5235] px-2.5 py-0.5 rounded-full border border-[#0D5235]/20">v{process.env.NEXT_PUBLIC_APP_VERSION || "3.0.0"}</span>
             </h1>
             <p className="text-xs text-slate-500">Trình tạo bảng báo giá thông minh & đồng bộ nhận diện mới</p>
           </div>
@@ -1234,27 +1234,20 @@ function PageContent() {
         <section className="lg:col-span-5 bg-white border-r border-slate-200 flex flex-col min-h-[500px] lg:h-[calc(100vh-73px)] text-slate-800 shadow-sm overflow-y-auto">
 
           {/* TAB BAR NAVIGATION */}
-          <div className="grid grid-cols-3 bg-slate-50 p-1.5 border-b border-slate-200 text-center text-xs font-medium sticky top-0 z-20">
+          <div className="grid grid-cols-2 bg-slate-50 p-1.5 border-b border-slate-200 text-center text-xs font-medium sticky top-0 z-20">
             <button
               onClick={() => setActiveTab("general")}
               className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 rounded-lg transition-all ${activeTab === "general" ? "bg-white text-slate-900 font-bold border border-slate-200 shadow-sm" : "text-slate-500 hover:text-slate-800 hover:bg-slate-100/50"}`}
             >
               <FileText className="w-4 h-4" />
-              <span>Chung</span>
+              <span>Thông tin chung</span>
             </button>
             <button
               onClick={() => setActiveTab("products")}
               className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 rounded-lg transition-all ${activeTab === "products" ? "bg-white text-slate-900 font-bold border border-slate-200 shadow-sm" : "text-slate-500 hover:text-slate-800 hover:bg-slate-100/50"}`}
             >
               <Layers className="w-4 h-4" />
-              <span>Danh sách</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("image")}
-              className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 rounded-lg transition-all ${activeTab === "image" ? "bg-white text-slate-900 font-bold border border-slate-200 shadow-sm" : "text-slate-500 hover:text-slate-800 hover:bg-slate-100/50"}`}
-            >
-              <Sliders className="w-4 h-4" />
-              <span>Xử lý ảnh</span>
+              <span>Sản phẩm</span>
             </button>
           </div>
 
@@ -1548,107 +1541,342 @@ function PageContent() {
                           </div>
                         </div>
 
-                        {/* ACCORDION EXPANDED FORM */}
+                        {/* ACCORDION EXPANDED FORM (2 ZONES: INFO & IMAGE ADJUSTMENTS) */}
                         {selectedProductId === p.id && (
-                          <div className="border-t border-slate-100 p-4 space-y-3.5 animate-fadeIn bg-white">
-                            <div className="grid grid-cols-2 gap-3">
-                              <div>
-                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mã sản phẩm</label>
-                                <input
-                                  type="text"
-                                  value={p.productCode}
-                                  onChange={(e) => updateProductField(p.id, "productCode", e.target.value)}
-                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
-                                />
+                          <div className="border-t border-slate-100 p-4 animate-fadeIn bg-white">
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+                              {/* ZONE 1: PRODUCT INFO (7 Cols) */}
+                              <div className="md:col-span-7 space-y-4">
+                                <div className="border-b border-slate-100 pb-2">
+                                  <h3 className="text-xs font-bold text-[#0D5235] uppercase tracking-wider flex items-center gap-1.5">
+                                    <FileText className="w-3.5 h-3.5" />
+                                    <span>Thông tin sản phẩm</span>
+                                  </h3>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                  <div>
+                                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mã sản phẩm</label>
+                                    <input
+                                      type="text"
+                                      value={p.productCode}
+                                      onChange={(e) => updateProductField(p.id, "productCode", e.target.value)}
+                                      className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Thương hiệu</label>
+                                    <div className="grid grid-cols-3 gap-1 bg-slate-50 p-1 rounded-xl border border-slate-200 h-[34px] items-center">
+                                      {[
+                                        { key: "GAMA", color: "bg-[#0D5235] text-white" },
+                                        { key: "Lendo", color: "bg-[#0284C7] text-white" },
+                                        { key: "Ares", color: "bg-[#DB2777] text-white" }
+                                      ].map(b => (
+                                        <button
+                                          key={b.key}
+                                          type="button"
+                                          onClick={() => updateProductField(p.id, "brand", b.key)}
+                                          className={`py-1 rounded-lg text-[10px] font-bold transition-all text-center h-[26px] flex items-center justify-center
+                                            ${p.brand === b.key ? `${b.color} shadow-sm` : "text-slate-500 hover:text-slate-800 bg-transparent hover:bg-slate-100"}`}
+                                        >
+                                          {b.key}
+                                        </button>
+                                      ))}
+                                    </div>
+                                  </div>
+
+                                  <div className="col-span-2">
+                                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tên sản phẩm</label>
+                                    <input
+                                      type="text"
+                                      value={p.productName}
+                                      onChange={(e) => updateProductField(p.id, "productName", e.target.value)}
+                                      className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Giá bán lẻ (VNĐ)</label>
+                                    <input
+                                      type="number"
+                                      value={p.price}
+                                      onChange={(e) => updateProductField(p.id, "price", parseInt(e.target.value) || 0)}
+                                      className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Đơn vị tính (ĐVT)</label>
+                                    <input
+                                      type="text"
+                                      value={p.unit}
+                                      onChange={(e) => updateProductField(p.id, "unit", e.target.value)}
+                                      className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
+                                    />
+                                  </div>
+
+                                  <div className="col-span-2">
+                                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mô tả sản phẩm / Chi tiết kỹ thuật</label>
+                                    <textarea
+                                      value={p.description || ""}
+                                      onChange={(e) => updateProductField(p.id, "description", e.target.value)}
+                                      rows={3}
+                                      placeholder="Mô tả chất liệu, đặc tính kỹ thuật..."
+                                      className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235] resize-none"
+                                    />
+                                  </div>
+                                </div>
+
+                                {/* AI Fill Action Button */}
+                                <div className="pt-2">
+                                  <button
+                                    onClick={() => handleAiProductAnalysis(p.id)}
+                                    disabled={isAiLoading}
+                                    className="w-full py-2.5 bg-[#0D5235] hover:bg-[#0D5235]/90 disabled:opacity-40 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                                    title="Dùng AI phân tích hình ảnh và điền tự động"
+                                  >
+                                    <Sparkles className="w-3.5 h-3.5" />
+                                    <span>AI đề xuất thông tin</span>
+                                  </button>
+                                </div>
                               </div>
 
-                              <div>
-                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Thương hiệu</label>
-                                <select
-                                  value={p.brand}
-                                  onChange={(e) => updateProductField(p.id, "brand", e.target.value)}
-                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
-                                >
-                                  <option value="GAMA">GAMA</option>
-                                  <option value="Lendo">Lendo</option>
-                                  <option value="Ares">Ares</option>
-                                </select>
-                              </div>
+                              {/* ZONE 2: PRODUCT IMAGE & ADJUSTMENTS (5 Cols) */}
+                              <div className="md:col-span-5 space-y-4 border-t md:border-t-0 md:border-l border-slate-100 pt-4 md:pt-0 md:pl-5 flex flex-col justify-between">
+                                <div>
+                                  <div className="border-b border-slate-100 pb-2 mb-3 flex items-center justify-between">
+                                    <h3 className="text-xs font-bold text-[#0D5235] uppercase tracking-wider flex items-center gap-1.5">
+                                      <ImageIcon className="w-3.5 h-3.5" />
+                                      <span>Hình SP</span>
+                                    </h3>
 
-                              <div className="col-span-2">
-                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tên sản phẩm</label>
-                                <input
-                                  type="text"
-                                  value={p.productName}
-                                  onChange={(e) => updateProductField(p.id, "productName", e.target.value)}
-                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
-                                />
-                              </div>
+                                    <div>
+                                      <input
+                                        type="file"
+                                        id={`img-uploader-${p.id}`}
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                          if (e.target.files?.[0]) {
+                                            handleImageUpload(p.id, e.target.files[0]);
+                                          }
+                                        }}
+                                        className="hidden"
+                                      />
+                                      <label
+                                        htmlFor={`img-uploader-${p.id}`}
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold rounded-lg text-[10px] cursor-pointer transition-all shadow-sm"
+                                      >
+                                        <Upload className="w-3.5 h-3.5 text-slate-500" />
+                                        <span>Tải ảnh mới</span>
+                                      </label>
+                                    </div>
+                                  </div>
 
-                              <div>
-                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Giá bán lẻ (VNĐ)</label>
-                                <input
-                                  type="number"
-                                  value={p.price}
-                                  onChange={(e) => updateProductField(p.id, "price", parseInt(e.target.value) || 0)}
-                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
-                                />
-                              </div>
+                                  {/* IMAGE ADJUSTMENTS CONTROLS GRID */}
+                                  <div className="space-y-2.5">
+                                    {/* Brightness */}
+                                    <div className="space-y-0.5">
+                                      <div className="flex justify-between text-[10px] font-semibold">
+                                        <span className="text-slate-500">Độ sáng</span>
+                                        <span className="text-[#0D5235] font-mono">{p.brightness}%</span>
+                                      </div>
+                                      <input
+                                        type="range"
+                                        min="50"
+                                        max="160"
+                                        value={p.brightness}
+                                        onChange={(e) => updateProductField(p.id, "brightness", parseInt(e.target.value))}
+                                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#0D5235]"
+                                      />
+                                    </div>
 
-                              <div>
-                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Đơn vị tính (ĐVT)</label>
-                                <input
-                                  type="text"
-                                  value={p.unit}
-                                  onChange={(e) => updateProductField(p.id, "unit", e.target.value)}
-                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235]"
-                                />
-                              </div>
+                                    {/* Contrast */}
+                                    <div className="space-y-0.5">
+                                      <div className="flex justify-between text-[10px] font-semibold">
+                                        <span className="text-slate-500">Độ tương phản</span>
+                                        <span className="text-[#0D5235] font-mono">{p.contrast}%</span>
+                                      </div>
+                                      <input
+                                        type="range"
+                                        min="50"
+                                        max="160"
+                                        value={p.contrast}
+                                        onChange={(e) => updateProductField(p.id, "contrast", parseInt(e.target.value))}
+                                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#0D5235]"
+                                      />
+                                    </div>
 
-                              <div className="col-span-2">
-                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mô tả sản phẩm / Chi tiết kỹ thuật</label>
-                                <textarea
-                                  value={p.description || ""}
-                                  onChange={(e) => updateProductField(p.id, "description", e.target.value)}
-                                  rows={2}
-                                  placeholder="Mô tả chất liệu, đặc tính kỹ thuật..."
-                                  className="w-full bg-white border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#0D5235] focus:ring-1 focus:ring-[#0D5235] resize-none"
-                                />
-                              </div>
-                            </div>
+                                    {/* Saturation */}
+                                    <div className="space-y-0.5">
+                                      <div className="flex justify-between text-[10px] font-semibold">
+                                        <span className="text-slate-500">Độ bão hòa</span>
+                                        <span className="text-[#0D5235] font-mono">{p.saturate}%</span>
+                                      </div>
+                                      <input
+                                        type="range"
+                                        min="50"
+                                        max="160"
+                                        value={p.saturate}
+                                        onChange={(e) => updateProductField(p.id, "saturate", parseInt(e.target.value))}
+                                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#0D5235]"
+                                      />
+                                    </div>
 
-                            {/* Image Controls inside the product card */}
-                            <div className="flex gap-2 pt-2 border-t border-slate-100/60 mt-2">
-                              <div className="flex-1 relative">
-                                <input
-                                  type="file"
-                                  id={`img-uploader-${p.id}`}
-                                  accept="image/*"
-                                  onChange={(e) => {
-                                    if (e.target.files?.[0]) {
-                                      handleImageUpload(p.id, e.target.files[0]);
-                                    }
-                                  }}
-                                  className="hidden"
-                                />
-                                <label
-                                  htmlFor={`img-uploader-${p.id}`}
-                                  className="w-full py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-lg text-xs text-center block cursor-pointer border border-slate-200 flex items-center justify-center gap-1.5 transition-all shadow-sm"
-                                >
-                                  <Upload className="w-3.5 h-3.5 text-slate-500" />
-                                  <span>Tải ảnh sản phẩm</span>
-                                </label>
-                              </div>
+                                    {/* Scale */}
+                                    <div className="space-y-0.5">
+                                      <div className="flex justify-between text-[10px] font-semibold">
+                                        <span className="text-slate-500">Kích thước ảnh (Scale)</span>
+                                        <span className="text-[#0D5235] font-mono">{((p.scale || 100) / 100).toFixed(1)}x</span>
+                                      </div>
+                                      <input
+                                        type="range"
+                                        min="50"
+                                        max="300"
+                                        step="10"
+                                        value={p.scale || 100}
+                                        onChange={(e) => updateProductField(p.id, "scale", parseInt(e.target.value))}
+                                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#0D5235]"
+                                      />
+                                    </div>
 
-                              <button
-                                onClick={() => handleAiProductAnalysis(p.id)}
-                                disabled={isAiLoading}
-                                className="px-4 py-2 bg-[#0D5235] hover:bg-[#0D5235]/90 disabled:opacity-40 text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all"
-                                title="Dùng AI phân tích hình ảnh và điền tự động"
-                              >
-                                <Sparkles className="w-3.5 h-3.5" />
-                                <span>AI Tự điền</span>
-                              </button>
+                                    {/* Padding */}
+                                    <div className="space-y-0.5">
+                                      <div className="flex justify-between text-[10px] font-semibold">
+                                        <span className="text-slate-500">Khoảng lề (Padding)</span>
+                                        <span className="text-[#0D5235] font-mono">{p.padding}px</span>
+                                      </div>
+                                      <input
+                                        type="range"
+                                        min="0"
+                                        max="30"
+                                        value={p.padding}
+                                        onChange={(e) => updateProductField(p.id, "padding", parseInt(e.target.value))}
+                                        className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#0D5235]"
+                                      />
+                                    </div>
+
+                                    {/* Rotation */}
+                                    <div className="flex items-center justify-between pt-1">
+                                      <span className="text-[10px] font-semibold text-slate-500">Xoay ảnh</span>
+                                      <div className="flex gap-1">
+                                        {[0, 90, 180, 270].map(deg => (
+                                          <button
+                                            key={deg}
+                                            onClick={() => updateProductField(p.id, "rotation", deg)}
+                                            className={`px-2 py-0.5 font-mono text-[9px] rounded transition-all ${p.rotation === deg ? "bg-[#0D5235] text-white font-bold" : "bg-white border border-slate-200 text-slate-600 hover:text-slate-900"}`}
+                                          >
+                                            {deg}°
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Background Color Match */}
+                                <div className="mt-4 bg-slate-50 p-3 rounded-2xl border border-slate-150 space-y-2">
+                                  <div className="flex items-center justify-between">
+                                    <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Màu nền</p>
+                                    <button
+                                      onClick={() => {
+                                        const targetColor = p.bgColor;
+                                        const targetPadding = p.padding;
+                                        setProducts(prev => prev.map(prod => ({ ...prod, bgColor: targetColor, padding: targetPadding })));
+                                        triggerNotification(`Đã áp dụng màu nền ${targetColor} cho tất cả dòng sản phẩm!`, "success");
+                                      }}
+                                      className="text-[9px] text-[#0D5235] hover:underline font-bold"
+                                      title="Áp dụng màu nền và lề của sản phẩm này cho tất cả sản phẩm khác"
+                                    >
+                                      Áp dụng cho tất cả
+                                    </button>
+                                  </div>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {[
+                                      { color: "#ffffff", label: "Trắng" },
+                                      { color: "#f8fafc", label: "Bạc" },
+                                      { color: "#f0f9ff", label: "Lendo" },
+                                      { color: "#f0fdf4", label: "GAMA" },
+                                      { color: "#fdf2f8", label: "Ares" },
+                                      { color: "transparent", label: "Trong suốt" }
+                                    ].map((c, cIdx) => (
+                                      <button
+                                        key={cIdx}
+                                        onClick={() => updateProductField(p.id, "bgColor", c.color)}
+                                        className={`w-6 h-6 rounded-full border transition-all relative flex items-center justify-center
+                                          ${p.bgColor === c.color ? "border-[#0D5235] scale-110 shadow-sm" : "border-slate-300 hover:border-slate-450"}`}
+                                        style={{ backgroundColor: c.color }}
+                                        title={c.label}
+                                      >
+                                        {p.bgColor === c.color && <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: c.color === "transparent" || c.color === "#ffffff" ? "#0D5235" : "#ffffff" }}></div>}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* Background Removal Tools (only for custom uploaded images) */}
+                                {p.isCustomImage && (
+                                  <div className="mt-3 bg-slate-50 p-3 rounded-2xl border border-slate-150 space-y-2">
+                                    <div className="flex items-center justify-between">
+                                      <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Tách nền</p>
+                                      <span className={`text-[8px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full border ${p.isBgRemoved ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-slate-100 text-slate-500 border-slate-200"}`}>
+                                        {p.isBgRemoved ? "Đã tách" : "Chưa tách"}
+                                      </span>
+                                    </div>
+                                    <div className="flex gap-1.5">
+                                      <button
+                                        onClick={async () => {
+                                          const original = p.originalImage || p.image;
+                                          try {
+                                            setAiStatus("remove-bg");
+                                            triggerNotification("Đang tách nền bằng AI...", "info");
+                                            let removed = original;
+                                            try {
+                                              removed = await removeBgUsingGeminiAI(original);
+                                            } catch (err) {
+                                              console.warn("AI background removal failed, falling back to chroma keying...", err);
+                                              removed = await removeImageBackground(original, 35);
+                                            }
+                                            setProducts(prev => prev.map(prod => {
+                                              if (prod.id === p.id) {
+                                                return { ...prod, image: removed, originalImage: original, isBgRemoved: true };
+                                              }
+                                              return prod;
+                                            }));
+                                            triggerNotification("Tách nền thành công!", "success");
+                                          } catch (err) {
+                                            console.error("BG removal error:", err);
+                                            triggerNotification("Lỗi khi tách nền ảnh.", "error");
+                                          } finally {
+                                            setAiStatus(null);
+                                          }
+                                        }}
+                                        className="flex-1 py-1.5 bg-[#0D5235] hover:bg-[#0D5235]/90 text-white text-[10px] font-bold rounded-lg transition-all shadow-sm flex items-center justify-center gap-1"
+                                      >
+                                        <span>Tách nền AI</span>
+                                      </button>
+                                      {(p.originalImage || p.isBgRemoved) && (
+                                        <button
+                                          onClick={() => {
+                                            if (p.originalImage) {
+                                              setProducts(prev => prev.map(prod => {
+                                                if (prod.id === p.id) {
+                                                  return { ...prod, image: p.originalImage!, isBgRemoved: false };
+                                                }
+                                                return prod;
+                                              }));
+                                              triggerNotification("Đã khôi phục nền gốc của ảnh!", "info");
+                                            }
+                                          }}
+                                          className="px-2.5 py-1.5 bg-white hover:bg-slate-50 text-slate-700 text-[10px] font-bold rounded-lg border border-slate-200 transition-all"
+                                        >
+                                          Khôi phục
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           </div>
                         )}
@@ -1657,287 +1885,8 @@ function PageContent() {
                   </div>
                 )}
 
-
               </div>
             )}
-
-            {/* TAB 3: CUSTOM IMAGE PROCESSING LAB */}
-            {activeTab === "image" && (
-              <div className="space-y-5 animate-fadeIn">
-                <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-                  <Sliders className="w-5 h-5 text-[#0D5235]" />
-                  <h2 className="text-base font-bold text-slate-900">Sửa ảnh sản phẩm</h2>
-                </div>
-
-                {!selectedProductId ? (
-                  <div className="text-center py-10 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-xs">
-                    Vui lòng chọn hoặc thêm một sản phẩm để tiến hành xử lý hình ảnh!
-                  </div>
-                ) : (
-                  <div className="space-y-5">
-                    {/* Active product highlight header */}
-                    <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                      <div
-                        className="w-10 h-10 rounded bg-white flex items-center justify-center shrink-0 border border-slate-200 overflow-hidden"
-                        style={{ backgroundColor: selectedProduct.bgColor }}
-                      >
-                        <img
-                          src={selectedProduct.image}
-                          alt=""
-                          className="max-w-[90%] max-h-[90%] object-contain"
-                          style={{
-                            filter: `brightness(${selectedProduct.brightness}%) contrast(${selectedProduct.contrast}%) saturate(${selectedProduct.saturate}%)`,
-                            transform: `rotate(${selectedProduct.rotation}deg) scale(${(selectedProduct.scale || 100) / 100})`
-                          }}
-                        />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-bold text-slate-400 font-mono">{selectedProduct.productCode}</p>
-                        <p className="text-xs text-slate-800 truncate font-medium">{selectedProduct.productName}</p>
-                      </div>
-                    </div>
-
-                    {/* Predefined Instant Filter Presets */}
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-500 mb-2">Bộ lọc nhanh (Studio Presets)</label>
-                      <div className="grid grid-cols-5 gap-1.5">
-                        {[
-                          { key: "default", name: "Gốc" },
-                          { key: "bright", name: "Sáng" },
-                          { key: "warm", name: "Ấm áp" },
-                          { key: "vibrant", name: "Đậm" },
-                          { key: "studio", name: "Phòng" }
-                        ].map(item => (
-                          <button
-                            key={item.key}
-                            onClick={() => applyInstantFilter(item.key as any)}
-                            className="bg-white border border-slate-200 hover:border-slate-900 text-slate-600 py-1.5 px-1 rounded text-[10px] font-semibold transition-all hover:text-slate-900"
-                          >
-                            {item.name}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Background Removal Tools */}
-                    {selectedProduct.isCustomImage && (
-                      <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-4 space-y-3">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Tách nền tự động (AI-Chroma)</h3>
-                          <span className={`text-[8px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full border ${selectedProduct.isBgRemoved ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-slate-50 text-slate-500 border-slate-200"}`}>
-                            {selectedProduct.isBgRemoved ? "Đã tách nền" : "Chưa tách nền"}
-                          </span>
-                        </div>
-                        <p className="text-[10px] text-slate-500 leading-normal">Thuật toán tự động phát hiện và xóa sạch màu nền dựa trên các góc của hình ảnh sản phẩm.</p>
-
-                        <div className="flex gap-2">
-                          <button
-                            onClick={async () => {
-                              const original = selectedProduct.originalImage || selectedProduct.image;
-                              try {
-                                setAiStatus("remove-bg");
-                                triggerNotification("Đang tách nền bằng AI...", "info");
-                                let removed = original;
-                                try {
-                                  removed = await removeBgUsingGeminiAI(original);
-                                } catch (err) {
-                                  console.warn("AI background removal failed, falling back to chroma keying...", err);
-                                  removed = await removeImageBackground(original, 35);
-                                }
-                                setProducts(prev => prev.map(p => {
-                                  if (p.id === selectedProduct.id) {
-                                    return { ...p, image: removed, originalImage: original, isBgRemoved: true };
-                                  }
-                                  return p;
-                                }));
-                                triggerNotification("Tách nền thành công!", "success");
-                              } catch (err) {
-                                console.error("Manual BG removal error:", err);
-                                triggerNotification("Lỗi khi tách nền ảnh.", "error");
-                              } finally {
-                                setAiStatus(null);
-                              }
-                            }}
-                            className="flex-1 py-1.5 bg-[#0D5235] hover:bg-[#0D5235]/90 text-white text-[10px] font-bold rounded-lg transition-all shadow-sm flex items-center justify-center gap-1"
-                          >
-                            <span>Xóa nền tự động</span>
-                          </button>
-
-                          {(selectedProduct.originalImage || selectedProduct.isBgRemoved) && (
-                            <button
-                              onClick={() => {
-                                if (selectedProduct.originalImage) {
-                                  setProducts(prev => prev.map(p => {
-                                    if (p.id === selectedProduct.id) {
-                                      return { ...p, image: selectedProduct.originalImage!, isBgRemoved: false };
-                                    }
-                                    return p;
-                                  }));
-                                  triggerNotification("Đã khôi phục nền gốc của ảnh!", "info");
-                                }
-                              }}
-                              className="py-1.5 px-3 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 text-[10px] font-bold rounded-lg border border-slate-200 hover:border-slate-300 transition-all flex items-center justify-center gap-1"
-                            >
-                              <span>Khôi phục nền</span>
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Brightness, Contrast, Saturation sliders */}
-                    <div className="space-y-4 bg-slate-50/50 p-4 rounded-xl border border-slate-200">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Thông số điều chỉnh ảnh</h3>
-
-                      {/* Brightness */}
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-xs font-semibold">
-                          <span className="text-slate-500">Độ sáng (Brightness)</span>
-                          <span className="text-[#0D5235] font-mono">{selectedProduct.brightness}%</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="50"
-                          max="160"
-                          value={selectedProduct.brightness}
-                          onChange={(e) => updateProductField(selectedProduct.id, "brightness", parseInt(e.target.value))}
-                          className="w-full accent-[#0D5235]"
-                        />
-                      </div>
-
-                      {/* Contrast */}
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-xs font-semibold">
-                          <span className="text-slate-500">Độ tương phản (Contrast)</span>
-                          <span className="text-[#0D5235] font-mono">{selectedProduct.contrast}%</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="50"
-                          max="160"
-                          value={selectedProduct.contrast}
-                          onChange={(e) => updateProductField(selectedProduct.id, "contrast", parseInt(e.target.value))}
-                          className="w-full accent-[#0D5235]"
-                        />
-                      </div>
-
-                      {/* Saturation */}
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-xs font-semibold">
-                          <span className="text-slate-500">Độ bão hòa (Saturation)</span>
-                          <span className="text-[#0D5235] font-mono">{selectedProduct.saturate}%</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="50"
-                          max="160"
-                          value={selectedProduct.saturate}
-                          onChange={(e) => updateProductField(selectedProduct.id, "saturate", parseInt(e.target.value))}
-                          className="w-full accent-[#0D5235]"
-                        />
-                      </div>
-
-                      {/* Padding */}
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-xs font-semibold">
-                          <span className="text-slate-500">Khoảng lề ảnh (Padding)</span>
-                          <span className="text-[#0D5235] font-mono">{selectedProduct.padding}px</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="0"
-                          max="30"
-                          value={selectedProduct.padding}
-                          onChange={(e) => updateProductField(selectedProduct.id, "padding", parseInt(e.target.value))}
-                          className="w-full accent-[#0D5235]"
-                        />
-                      </div>
-
-                      {/* Scale / Image Size */}
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-xs font-semibold">
-                          <span className="text-slate-500">Kích thước ảnh (Scale)</span>
-                          <span className="text-[#0D5235] font-mono">{((selectedProduct.scale || 100) / 100).toFixed(1)}x</span>
-                        </div>
-                        <input
-                          type="range"
-                          min="50"
-                          max="300"
-                          step="10"
-                          value={selectedProduct.scale || 100}
-                          onChange={(e) => updateProductField(selectedProduct.id, "scale", parseInt(e.target.value))}
-                          className="w-full accent-[#0D5235]"
-                        />
-                      </div>
-
-                      {/* Rotation control */}
-                      <div className="flex items-center justify-between border-t border-slate-100 pt-3 mt-1">
-                        <span className="text-xs font-semibold text-slate-500">Xoay hình ảnh</span>
-                        <div className="flex gap-1.5">
-                          {[0, 90, 180, 270].map(deg => (
-                            <button
-                              key={deg}
-                              onClick={() => updateProductField(selectedProduct.id, "rotation", deg)}
-                              className={`px-2 py-1 font-mono text-[10px] rounded transition-all ${selectedProduct.rotation === deg ? "bg-slate-900 text-white font-bold" : "bg-white border border-slate-200 text-slate-600 hover:text-slate-900"}`}
-                            >
-                              {deg}°
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Background Sync Options */}
-                    <div className="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200">
-                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Đồng bộ màu nền (Background Match)</h3>
-                      <p className="text-[11px] text-slate-500">Căn chuẩn màu nền của khung sản phẩm để hiển thị đồng nhất đẹp mắt trong báo giá:</p>
-
-                      <div className="grid grid-cols-4 gap-2 pt-1">
-                        {[
-                          { color: "#ffffff", label: "Trắng" },
-                          { color: "#f8fafc", label: "Bạc" },
-                          { color: "#f0f9ff", label: "Ice Blue" },
-                          { color: "#f0fdf4", label: "Mint" },
-                          { color: "#fffbeb", label: "Cát" },
-                          { color: "#faf5ff", label: "Tím nhạt" },
-                          { color: "#1e293b", label: "Slate" },
-                          { color: "transparent", label: "Trong suốt" }
-                        ].map((c, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => updateProductField(selectedProduct.id, "bgColor", c.color)}
-                            className={`p-1.5 rounded-lg border text-center transition-all flex flex-col items-center justify-center gap-1
-                              ${selectedProduct.bgColor === c.color ? "border-[#0D5235] bg-[#0D5235]/10/50" : "border-slate-200 hover:border-slate-300 bg-white"}`}
-                          >
-                            <span
-                              className="w-5 h-5 rounded border border-slate-200 shadow-inner block"
-                              style={{ backgroundColor: c.color }}
-                            ></span>
-                            <span className="text-[9px] text-slate-600 truncate w-full">{c.label}</span>
-                          </button>
-                        ))}
-                      </div>
-
-                      {/* Apply to all button */}
-                      <button
-                        onClick={() => {
-                          const targetColor = selectedProduct.bgColor;
-                          const targetPadding = selectedProduct.padding;
-                          setProducts(prev => prev.map(p => ({ ...p, bgColor: targetColor, padding: targetPadding })));
-                          triggerNotification(`Đã áp dụng màu nền ${targetColor} cho tất cả dòng sản phẩm!`, "success");
-                        }}
-                        className="w-full mt-2 py-2 bg-slate-100 hover:bg-slate-200 text-[#0D5235] hover:text-[#0D5235] font-bold rounded text-xs border border-slate-200 flex items-center justify-center gap-1.5 transition-all"
-                      >
-                        <Layers className="w-3.5 h-3.5 text-[#0D5235]" />
-                        Áp dụng màu nền này cho TẤT CẢ sản phẩm
-                      </button>
-                    </div>
-
-                  </div>
-                )}
-              </div>
-            )}
-
 
 
           </div>
