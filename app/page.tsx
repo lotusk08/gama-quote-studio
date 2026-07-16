@@ -602,7 +602,7 @@ function PageContent() {
   // ==========================================
   const [products, setProducts] = useState<Product[]>(sampleProducts);
   const [selectedProductId, setSelectedProductId] = useState<string>(sampleProducts[0]?.id || "");
-  const [activeTab, setActiveTab] = useState<"general" | "products" | "image" | "ai">("general");
+  const [activeTab, setActiveTab] = useState<"general" | "products" | "image">("general");
   const [template, setTemplate] = useState<"enterprise" | "bento" | "poster">("enterprise");
   const [zoom, setZoom] = useState<number>(85); // percentage
   const [notification, setNotification] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
@@ -1352,7 +1352,7 @@ function PageContent() {
         <section className="lg:col-span-5 bg-white border-r border-slate-200 flex flex-col min-h-[500px] lg:h-[calc(100vh-73px)] text-slate-800 shadow-sm overflow-y-auto">
 
           {/* TAB BAR NAVIGATION */}
-          <div className="grid grid-cols-4 bg-slate-50 p-1.5 border-b border-slate-200 text-center text-xs font-medium sticky top-0 z-20">
+          <div className="grid grid-cols-3 bg-slate-50 p-1.5 border-b border-slate-200 text-center text-xs font-medium sticky top-0 z-20">
             <button
               onClick={() => setActiveTab("general")}
               className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 rounded-lg transition-all ${activeTab === "general" ? "bg-white text-slate-900 font-bold border border-slate-200 shadow-sm" : "text-slate-500 hover:text-slate-800 hover:bg-slate-100/50"}`}
@@ -1373,14 +1373,6 @@ function PageContent() {
             >
               <Sliders className="w-4 h-4" />
               <span>Xử lý ảnh</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("ai")}
-              className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 rounded-lg transition-all relative ${activeTab === "ai" ? "bg-white text-slate-900 font-bold border border-slate-200 shadow-sm" : "text-slate-500 hover:text-slate-800 hover:bg-slate-100/50"}`}
-            >
-              <Sparkles className="w-4 h-4 text-[#0D5235] animate-pulse" />
-              <span>Xử lý bằng AI</span>
-              <span className="absolute top-1 right-1 w-2 h-2 bg-[#0D5235]/100 rounded-full animate-ping"></span>
             </button>
           </div>
 
@@ -2033,68 +2025,7 @@ function PageContent() {
               </div>
             )}
 
-            {/* TAB 4: INTELLIGENT AI ASSISTANT HUB */}
-            {activeTab === "ai" && (
-              <div className="space-y-4 animate-fadeIn">
-                <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-                  <Sparkle className="w-5 h-5 text-[#0D5235] animate-pulse" />
-                  <h2 className="text-base font-bold text-slate-900">Trợ lý Trí tuệ Nhân tạo Gemini</h2>
-                </div>
 
-                <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200 space-y-3">
-                  <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-[#0D5235]" />
-                    Tính năng AI Tự Động Điền
-                  </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    Hệ thống tích hợp mô hình <strong>Gemini 3.5 Flash</strong> máy chủ mạnh mẽ. Chỉ cần tải ảnh sản phẩm thực tế lên, AI sẽ:
-                  </p>
-                  <ul className="space-y-1.5 text-xs text-slate-500 list-disc list-inside">
-                    <li>Nhận diện chính xác loại thiết bị trong ảnh.</li>
-                    <li>Gợi ý mã sản phẩm khoa học (viết hoa chuẩn mã).</li>
-                    <li>Biên soạn tên hàng hóa chi tiết và giàu tính kỹ thuật.</li>
-                    <li>Ước tính giá bán hợp lý, tự động chọn thương hiệu tối ưu.</li>
-                  </ul>
-                </div>
-
-                <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-200 space-y-3">
-                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Cách sử dụng cực kỳ đơn giản:</h3>
-                  <ol className="space-y-2 text-xs text-slate-500 list-decimal list-inside leading-relaxed">
-                    <li>Vào tab <strong>Danh sách</strong>, bấm nút <strong>Thêm SP</strong> mới.</li>
-                    <li>Chọn sản phẩm đó, bấm <strong>Tải ảnh thực tế lên</strong>.</li>
-                    <li>Sau khi ảnh tải xong, bấm nút <strong>AI Tự điền</strong> bên cạnh hoặc tại đây.</li>
-                  </ol>
-
-                  {selectedProduct && selectedProduct.isCustomImage ? (
-                    <button
-                      onClick={() => handleAiProductAnalysis(selectedProduct.id)}
-                      disabled={isAiLoading}
-                      className="w-full mt-2 py-2.5 bg-[#0D5235] hover:bg-[#0D5235]/90 disabled:opacity-40 text-white font-bold rounded-lg text-xs flex items-center justify-center gap-2 shadow-md transition-all"
-                    >
-                      {isAiLoading ? (
-                        <>
-                          <RefreshCw className="w-4 h-4 animate-spin" />
-                          <span>Đang phân tích hình ảnh...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4" />
-                          <span>Chạy AI phân tích cho: {selectedProduct.productCode}</span>
-                        </>
-                      )}
-                    </button>
-                  ) : (
-                    <div className="p-3 bg-slate-50 rounded-lg text-center text-[11px] text-slate-400 border border-slate-200">
-                      Chưa chọn sản phẩm có ảnh tùy chỉnh. Hãy tải ảnh thực tế lên để kích hoạt nút chạy AI phân tích!
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-4 bg-[#0D5235]/10/50 rounded-xl border border-[#0D5235]/20 text-[11px] text-slate-500 leading-relaxed">
-                  <strong>Thông tin bảo mật:</strong> Quá trình truyền hình ảnh và xử lý được đảm bảo an toàn tuyệt đối thông qua hệ thống Proxy nội bộ phía máy chủ và API Key bảo mật chính hãng từ Google AI Studio.
-                </div>
-              </div>
-            )}
 
           </div>
 
